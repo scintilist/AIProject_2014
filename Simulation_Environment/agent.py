@@ -8,12 +8,10 @@ import raster
 
 class Agent():
 
-	def __init__(self, swarm, id, radius = 16, position = (0,0), 
-				velocity = (0,0), color = (0,0,0)):
+	def __init__(self, swarm, id, radius = 16, position = (0,0), velocity = (0,0)):
 		self.swarm = swarm
 		self.id = id
 		
-		self.bouncy = True # Sets whether the agent bounces off of terrain, or stops on collision
 		self.kill = False  # Set to True to cause the agent to be removed
 		self.frozen_count = 0 # Count of consecutive updates where the agent has not performed an action
 		self.timeout_count = float('inf') # Count of consecutive frozen updates until agent is removed
@@ -21,7 +19,6 @@ class Agent():
 		self.radius = radius
 		self.x, self.y = position
 		self.vx, self.vy = velocity
-		self.color = color
 		
 		self.distance_travelled = 0 # Tracks the total distance the agent has travelled over its life
 		
@@ -30,11 +27,10 @@ class Agent():
 		self.px = self.x
 		self.py = self.y
 		
-		# Calculate final location after terrain bounces
+		# Calculate final location after move
 		dx = self.vx * self.swarm.environment.dt
 		dy = self.vy * self.swarm.environment.dt
-		while dx != 0 or dy != 0:
-			dx, dy = self.terrain_collision_handler(dx, dy)
+		self.terrain_collision_handler(dx, dy)
 				
 		# Check if agent is active
 		if abs(self.x - self.px) < .001 and abs(self.y - self.py) < .001:
@@ -80,7 +76,7 @@ class Agent():
 			# Determine whether the start was inside the colliided block
 			if collided_block.point_distance((self.x, self.y)) < self.radius:
 				start_inside_block = True
-			else: # Handle collision and bounce
+			else: # Handle collision
 				start_inside_block = False
 				# Stop at intersection, then back off 1/1000 of a pixel
 				full_move_dist = math.sqrt(dx**2 + dy**2)
@@ -91,31 +87,8 @@ class Agent():
 				self.distance_travelled += util.distance((self.x, self.y), (nx, ny))
 				self.x = nx
 				self.y = ny
-				if self.bouncy:
-					# Calculate speed
-					speed = math.sqrt(self.vx**2 + self.vy**2)
-					# Calculate initial velocity unit vectors
-					iv_ux = self.vx / speed
-					iv_uy = self.vy / speed
-					# Surface normal unit vectors
-					sn_ux = surface_normal[0]
-					sn_uy = surface_normal[1]
-					# Calculate reflected velocity unit vectors
-					iv_dot_sn = sn_ux*iv_ux + sn_uy*iv_uy
-					rv_ux = iv_ux - 2 * iv_dot_sn * sn_ux
-					rv_uy = iv_uy - 2 * iv_dot_sn * sn_uy	
-					# Calculate remaining move vectors
-					rm_dist = util.distance((self.x, self.y),(self.nx, self.ny))
-					rm_x = rv_ux * rm_dist
-					rm_y = rv_uy * rm_dist
-					# Calculate new velocity
-					self.vx = rv_ux * speed
-					self.vy = rv_uy * speed
-					return (rm_x, rm_y) # Move incomplete, remaining move distance
-				else:
-					self.vx = 0
-					self.vy = 0
-					return (0,0) # Move complete
+				self.vx = 0
+				self.vy = 0
 
 		# If there was no intersection, or the start was inside the block				
 		if start_inside_block or not intersection_locations:
@@ -141,13 +114,7 @@ class Agent():
 				self.vy = -self.vy
 		return (0,0) # Move complete, no remaining dx or dy
 					
-	def draw(self, color = False):
-		if not color:
-			color = self.color
-			if len(color) == 3:
-				color = color + (1,)
+	def draw(self, color = (1,0,0,1)):
 		pyglet.gl.glPointSize(self.radius*2)
-		#color = color_maps.rainbow(self.distance_travelled/4)
-		#color = color_maps.rainbow(self.swarm.environment.time*50)
 		pyglet.gl.glColor4f(*color)
 		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )

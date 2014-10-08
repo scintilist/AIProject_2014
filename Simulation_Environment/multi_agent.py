@@ -1,7 +1,7 @@
 """
-Agents are non-inertial, massless, and do not colide with eachother
+Agents are non-inertial, massless, and do not collide with eachother
 Agents can be set to either bounce on terrain collision, or stop
-velocity is defined as pixels/second where the standard update is 100 steps/second
+velocity is defined as pixels/second where the standard visual update is 100 steps/second
 """
 
 import time
@@ -36,7 +36,7 @@ def update(realtime_dt):
 
 # Create and initialize environment
 environment = environment.Environment(dt = .015, sim_time = 0, window = window, 
-										hash_map_grid_size = 40, show_bins = True)
+										hash_map_grid_size = 40, show_bins = False)
 environment.create_perimeter_walls(location = 'inside', thickness = 15)
 # Create terrain
 create.create_terrain(environment, count = 30, scale = 60)

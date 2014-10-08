@@ -1,5 +1,3 @@
-
-
 class ActiveActions():
 
 	def __init__(self, environment):

@@ -5,7 +5,6 @@ import pyglet
 from pyglet.window import key
 
 import util
-import color_maps
 import block
 import agent
 
@@ -100,55 +99,22 @@ class DeleteObject(Action):
 class PlaceAgent(Action):
 	def __init__(self, environment, active_actions):
 		super().__init__(environment, active_actions)
-		self.color = color_maps.rainbow(random.uniform(0,360))
-		self.radius = 5
-		self.start = False
-		self.within_start_area = True
-		self.environment.window.push_handlers(self.on_mouse_press, self.on_mouse_release,
-											  self.on_key_press, self.on_mouse_drag)
+		self.radius = 20
+		self.environment.window.push_handlers(self.on_mouse_release, self.on_key_press)
 		
 	def undo(self):
 		self.environment.swarm.remove_agent(self.agent)
 		self.environment.redo.append(self)
 	
 	def redo(self):
-		dx = self.end[0] - self.start[0]
-		dy = self.end[1] - self.start[1]
-		self.agent = self.environment.swarm.add_new_agent(position = self.start, 
-			velocity = (dx, dy), radius = self.radius, color = self.color)
+		self.agent = self.environment.swarm.add_new_agent(position = self.position, 
+			velocity = (0, 0), radius = self.radius)
 		self.environment.undo.append(self)
-		
-	def draw(self):
-		if self.start:
-			pyglet.gl.glColor3f(.9,.1,.1)
-			pyglet.gl.glLineWidth(4)
-			pyglet.graphics.draw(2, pyglet.gl.GL_LINE_STRIP,('v2f', self.start + 
-				(self.environment.mouse_x, self.environment.mouse_y)) )
-				
-			if self.within_start_area:
-				self.radius = min(20 * (time.perf_counter() - self.start_time) + 5, 32)
-			
-			pyglet.gl.glColor3f(*self.color)
-			pyglet.gl.glPointSize(self.radius*2)
-			pyglet.graphics.draw(1, pyglet.gl.GL_POINTS,('v2f', self.start ) )
-	
-	def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-		if self.start:
-			if util.distance((x,y), self.start) > self.radius + 5:
-				self.within_start_area = False
-			
-	def on_mouse_press(self, x, y, button, modifiers):
-		if not self.start:
-			self.start = (x, y)
-			self.start_time = time.perf_counter()
-			return True
 	
 	def on_mouse_release(self, x, y, button, modifiers):
-		self.end = (x, y)
-		dx = self.end[0] - self.start[0]
-		dy = self.end[1] - self.start[1]
-		self.agent = self.environment.swarm.add_new_agent(position = self.start, 
-			velocity = (dx, dy), radius = self.radius, color = self.color)
+		self.position = (x,y)
+		self.agent = self.environment.swarm.add_new_agent(position = self.position, 
+			velocity = (0, 0), radius = self.radius)
 		self.start_new_action()
 		return True
 		
