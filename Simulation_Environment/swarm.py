@@ -13,8 +13,8 @@ class Swarm():
 		self.grid_size = self.terrain.grid_size
 		self.hash_map = {}
 		
-	def add_new_agent(self, position = (0, 0), velocity = (0, 0), radius = 16):
-		new_agent = agent.Agent(self, self.next_agent_id, radius, position, velocity)
+	def add_new_agent(self, radius = 16, position = (0, 0), speed = 0, direction = 0):
+		new_agent = agent.Agent(self, self.next_agent_id, radius, position, speed, direction)
 		self.agents.append(new_agent)
 		self.next_agent_id += 1
 		bins = raster.circle_bins((new_agent.x, new_agent.y), new_agent.radius, self.grid_size)
@@ -35,6 +35,8 @@ class Swarm():
 			agent.draw()
 	
 	def update(self):
+		# BEHAVIOR CODE RUN HERE
+	
 		for agent in self.agents:
 			agent.update()
 			

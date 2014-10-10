@@ -107,14 +107,14 @@ class PlaceAgent(Action):
 		self.environment.redo.append(self)
 	
 	def redo(self):
-		self.agent = self.environment.swarm.add_new_agent(position = self.position, 
-			velocity = (0, 0), radius = self.radius)
+		self.agent = self.environment.swarm.add_new_agent(radius = self.radius, position = self.position, 
+			speed = 0, direction = 0)
 		self.environment.undo.append(self)
 	
 	def on_mouse_release(self, x, y, button, modifiers):
 		self.position = (x,y)
-		self.agent = self.environment.swarm.add_new_agent(position = self.position, 
-			velocity = (0, 0), radius = self.radius)
+		self.agent = self.environment.swarm.add_new_agent(radius = self.radius, position = self.position, 
+			speed = 0, direction = 0)
 		self.start_new_action()
 		return True
 		

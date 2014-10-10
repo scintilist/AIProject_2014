@@ -8,7 +8,12 @@ import raster
 
 class Agent():
 
-	def __init__(self, swarm, id, radius = 16, position = (0,0), velocity = (0,0)):
+	def __init__(self, swarm, id, radius = 16, position = (0,0), speed = 10, direction = 0):
+		self.health = 100
+		
+		self.speed = speed
+		self.dir = direction # Radians, 0-2*pi
+	
 		self.swarm = swarm
 		self.id = id
 		
@@ -18,11 +23,15 @@ class Agent():
 		
 		self.radius = radius
 		self.x, self.y = position
-		self.vx, self.vy = velocity
 		
 		self.distance_travelled = 0 # Tracks the total distance the agent has travelled over its life
 		
 	def update(self):
+		
+		# Generate x and y velocity from speed and direction
+		self.vx = self.speed * math.cos(self.dir)
+		self.vy = self.speed * math.sin(self.dir)
+	
 		# Save current positions to determine if movement occurred
 		self.px = self.x
 		self.py = self.y
@@ -87,8 +96,7 @@ class Agent():
 				self.distance_travelled += util.distance((self.x, self.y), (nx, ny))
 				self.x = nx
 				self.y = ny
-				self.vx = 0
-				self.vy = 0
+				self.speed = 0
 
 		# If there was no intersection, or the start was inside the block				
 		if start_inside_block or not intersection_locations:
@@ -110,11 +118,17 @@ class Agent():
 				self.x = self.nx
 				self.y = self.ny
 			else:
-				self.vx = -self.vx
-				self.vy = -self.vy
-		return (0,0) # Move complete, no remaining dx or dy
+				self.dir += math.pi
 					
-	def draw(self, color = (1,0,0,1)):
+	def draw(self, color = (0,1,0,1)):
+		# Draw the agent body circle
 		pyglet.gl.glPointSize(self.radius*2)
 		pyglet.gl.glColor4f(*color)
 		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )
+		
+		# Draw the agent dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,1)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )

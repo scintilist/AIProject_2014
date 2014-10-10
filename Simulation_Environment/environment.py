@@ -19,10 +19,6 @@ class Environment():
 		self.terrain = terrain.Terrain(self, hash_map_grid_size)
 		self.swarm = swarm.Swarm(self)
 		
-		self.active = [] # list of active objects that must be drawn
-		self.undo = [] # stack of objects with undo methods to be called when ctrl-z is pressed
-		self.redo = [] # stack of objects with redo methods to be called when ctrl-y is pressed
-		
 		self.mouse_x = -1
 		self.mouse_y = -1
 		self.paused = False # if True, do not update

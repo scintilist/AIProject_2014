@@ -28,7 +28,6 @@ def create_swarm(environment, count = 20, radius = 20, velocity_range = (0, 500)
 			y = random.uniform(0, environment.window.height)
 			if environment.terrain.distance_to_nearest((x, y)) > radius:
 				break
-		dir = random.uniform(0, math.pi*2)
-		vx = math.cos(dir) * random.uniform(*velocity_range)
-		vy = math.sin(dir) * random.uniform(*velocity_range)
-		environment.swarm.add_new_agent(position = (x, y), velocity = (vx, vy), radius = radius)
+		direction = random.uniform(0, math.pi*2)
+		speed = random.uniform(*velocity_range)
+		environment.swarm.add_new_agent(radius = radius, position = (x, y), speed = speed, direction = direction)
