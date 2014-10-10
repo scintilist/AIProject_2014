@@ -13,6 +13,7 @@ class Agent():
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
+		self.ang_v = 2*math.pi
 	
 		self.swarm = swarm
 		self.id = id
@@ -27,6 +28,8 @@ class Agent():
 		self.distance_travelled = 0 # Tracks the total distance the agent has travelled over its life
 		
 	def update(self):
+		# Update direction with angular velocity
+		self.dir += self.ang_v * self.swarm.environment.dt
 		
 		# Generate x and y velocity from speed and direction
 		self.vx = self.speed * math.cos(self.dir)
