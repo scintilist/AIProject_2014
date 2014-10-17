@@ -16,7 +16,7 @@ import active_actions
 
 # Set up graphical window
 config = Config(double_buffer=True, depth_size=0, sample_buffers=1, samples=8)
-window = pyglet.window.Window(fullscreen=True, config=config) 
+window = pyglet.window.Window(width = 800, height = 600, config=config) # fullscreen = True
 glClearColor(.8,.8,.8,1) # Set background color
 glEnable(GL_BLEND) # Enable transparency / alpha blending
 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -37,11 +37,12 @@ def update(realtime_dt):
 # Create and initialize environment
 environment = environment.Environment(dt = .015, sim_time = 0, window = window, 
 										hash_map_grid_size = 40, show_bins = False)
-environment.create_perimeter_walls(location = 'inside', thickness = 15)
+environment.create_perimeter_walls(location = 'inside', thickness = 5)
 # Create terrain
-create.create_terrain(environment, count = 30, scale = 60)
+#create.create_random_terrain(environment, count = 30, scale = 60)
 # Create instances of agents
-create.create_swarm(environment, count = 20, radius = 20, velocity_range = (150, 300))
+#create.create_random_swarm(environment, count = 10, radius = 20, velocity_range = (150, 300))
+create.create_terrain_test_agents(environment)
 
 # Create active action manager
 active_actions = active_actions.ActiveActions(environment)

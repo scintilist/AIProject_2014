@@ -4,7 +4,7 @@ import math
 import swarm
 import color_maps
 
-def create_terrain(environment, count = 10, scale = 100):
+def create_random_terrain(environment, count = 10, scale = 100):
 	# Create random convex quadrilaterals
 	for i in range(count):
 		x_cm = random.uniform(0, environment.window.width)
@@ -19,8 +19,7 @@ def create_terrain(environment, count = 10, scale = 100):
 		y4 = y_cm + random.uniform(-scale,-scale*.25)
 		environment.terrain.add_block_by_points([(x1,y1), (x2,y2), (x3,y3), (x4,y4)])
 	
-def create_swarm(environment, count = 20, radius = 20, velocity_range = (0, 500)):
-	# Create agents
+def create_random_swarm(environment, count = 20, radius = 20, velocity_range = (0, 500)):
 	for n in range(count):
 		# Creates an agent at a random location and initial velocity, 
 		# but not overlapping any terrain
@@ -32,3 +31,6 @@ def create_swarm(environment, count = 20, radius = 20, velocity_range = (0, 500)
 		direction = random.uniform(0, math.pi*2)
 		speed = random.uniform(*velocity_range)
 		environment.swarm.add_new_agent(radius = radius, position = (x, y), speed = speed, direction = direction)
+	
+def create_terrain_test_agents(environment):
+	environment.swarm.add_new_agent(radius = 20, position = (100, 300), speed = 10, direction = math.pi)

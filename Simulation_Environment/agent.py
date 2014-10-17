@@ -47,14 +47,35 @@ class Agent():
 			
 	def get_inputs(self):
 		# Get terrain inputs
-		# Cast ray of length 200 forward, and 45 degrees to each side, return tuple of collision distances
-		
-		
+		# Cast ray forward, and 45 degrees to each side, return list of collision distances
+		self.terrain_distance = self.get_terrain_input(200)
 		
 		#Kyle
 		# BREAK HERE
 		#Tyler
 		
+	def get_terrain_input(self, view_range = 200):
+		terrain_distance = []
+		for i in range(0,3):
+			angle = self.dir + (i-1) * math.pi/4 # Left 45deg, Center, Right 45deg
+			# Line from self.x,self.y to view_x, view_y
+			view_x = self.x + view_range * math.cos(angle)
+			view_y = self.y + view_range * math.sin(angle)
+			# Get set of terrain hash map bins crossed by line
+			bins = raster.line_bins(a = (self.x, self.y), b = (view_x, view_y), 
+				bin_size = self.swarm.terrain.grid_size)
+			# Get set of blocks contained in the set of bins
+			block_set = self.swarm.terrain.check_for_blocks(bins)
+			# Get distance to closest intersection
+			dist = view_range
+			for block in block_set:
+				for edge in block.edges:
+					intersection = util.intersect((self.x, self.y), (view_x, view_y), edge[0], edge[1])
+					if intersection:
+						new_dist = util.distance((self.x, self.y), intersection)
+						dist = min(dist, new_dist)
+			terrain_distance.append(dist)
+		return terrain_distance
 			
 	def terrain_collision_handler(self, dx, dy):
 		# Add velocity to get next position (assuming no collision)

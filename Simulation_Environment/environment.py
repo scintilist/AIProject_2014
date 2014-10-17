@@ -23,7 +23,7 @@ class Environment():
 		self.swarm = swarm.Swarm(self)
 		
 		# Create predator
-		self.predator = predator.Predator(self, radius = 32, position = (800, 384), speed = 50, direction = math.pi)
+		self.predator = predator.Predator(self, radius = 32, position = (700, 300), speed = 50, direction = math.pi)
 		
 		self.mouse_x = -1
 		self.mouse_y = -1
