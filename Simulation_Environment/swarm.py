@@ -35,6 +35,9 @@ class Swarm():
 			agent.draw()
 	
 	def update(self):
+		for agent in self.agents:
+			agent.get_inputs()
+	
 		# BEHAVIOR CODE RUN HERE
 	
 		for agent in self.agents:

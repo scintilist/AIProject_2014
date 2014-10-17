@@ -18,8 +18,6 @@ class Agent():
 		self.id = id
 		
 		self.kill = False  # Set to True to cause the agent to be removed
-		self.frozen_count = 0 # Count of consecutive updates where the agent has not performed an action
-		self.timeout_count = float('inf') # Count of consecutive frozen updates until agent is removed
 		
 		self.radius = radius
 		self.x, self.y = position
@@ -42,14 +40,21 @@ class Agent():
 		dx = self.vx * self.swarm.environment.dt
 		dy = self.vy * self.swarm.environment.dt
 		self.terrain_collision_handler(dx, dy)
-				
-		# Check if agent is active
-		if abs(self.x - self.px) < .001 and abs(self.y - self.py) < .001:
-			self.frozen_count += 1
-		
-		# Mark agent for removal if it is not active for some time
-		if self.frozen_count >= self.timeout_count:
+			
+		# Mark agent for removal if its health drops to 0 or less
+		if self.health <= 0:
 			self.kill = True
+			
+	def get_inputs(self):
+		# Get terrain inputs
+		# Cast ray of length 200 forward, and 45 degrees to each side, return tuple of collision distances
+		
+		
+		
+		#Kyle
+		# BREAK HERE
+		#Tyler
+		
 			
 	def terrain_collision_handler(self, dx, dy):
 		# Add velocity to get next position (assuming no collision)
@@ -134,3 +139,29 @@ class Agent():
 		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
 			(self.x, self.y, 
 			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
+			
+			
+		# Draw the agent dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,1)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
+		
+		# Draw field of view
+		
+		# OPTOMIZE VERTEX GENERATION
+		
+		# Draw the agent dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,.5)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + 200 * math.cos(self.dir + math.pi/4), self.y + 200 * math.sin(self.dir + math.pi/4)) ) )
+			
+		# Draw the agent dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,.5)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + 200 * math.cos(self.dir - math.pi/4), self.y + 200 * math.sin(self.dir - math.pi/4)) ) )

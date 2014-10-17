@@ -9,7 +9,7 @@ import agent
 class Predator():
 
 	def __init__(self,  environment, radius = 32, position = (0,0), speed = 10, direction = 0):
-		self.health = 100
+		self.health = 1000
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
@@ -51,6 +51,10 @@ class Predator():
 		self.hash_map = {}
 		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
 		self.put_in_map(bins)
+		
+		# Mark agent for removal if its health drops to 0 or less
+		if self.health <= 0:
+			self.kill = True
 
 	def put_in_map(self, bins):
 		# Put agent in bins
