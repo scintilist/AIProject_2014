@@ -1,4 +1,6 @@
 import time
+import random
+import math
 
 import terrain
 import swarm
@@ -19,7 +21,9 @@ class Environment():
 		self.window = window # The window the environment is being displayed in
 		self.terrain = terrain.Terrain(self, hash_map_grid_size)
 		self.swarm = swarm.Swarm(self)
-		self.predator=predator.Predator(self)
+		
+		# Create predator
+		self.predator = predator.Predator(self, radius = 32, position = (800, 384), speed = 50, direction = math.pi)
 		
 		self.mouse_x = -1
 		self.mouse_y = -1
@@ -46,18 +50,19 @@ class Environment():
 		if self.show_bins:
 			# Get swarm bins
 			swarm_bins = set(self.swarm.hash_map.keys())
-			
-			#get the predator bin
-			predator_bin =set(self.predator.hash_map.keys())
-			
+			# Get the predator bins
+			predator_bins = set(self.predator.hash_map.keys())
 			# Get terrain bins
 			terrain_bins = set(self.terrain.hash_map.keys())
+			
 			# Draw terrain bins in dark grey
 			raster.draw_bins(terrain_bins - swarm_bins, self.terrain.grid_size, color = (.3, .3, .3))
 			# Draw swarm bins in green
 			raster.draw_bins(swarm_bins - terrain_bins, self.terrain.grid_size, color = (.1,.9,.1))
+			# Draw predator bins in blue
+			raster.draw_bins(predator_bins - terrain_bins, self.terrain.grid_size, color = (.1,.1,.9))
 			# Draw overlap in red
-			raster.draw_bins(swarm_bins & terrain_bins, self.terrain.grid_size, color = (.9,.1,.1))
+			raster.draw_bins((swarm_bins | predator_bins) & terrain_bins, self.terrain.grid_size, color = (.9,.1,.1))
 			
 	
 	def create_perimeter_walls(self, location = 'outside', thickness = 10):

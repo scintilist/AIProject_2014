@@ -43,8 +43,6 @@ create.create_terrain(environment, count = 30, scale = 60)
 # Create instances of agents
 create.create_swarm(environment, count = 20, radius = 20, velocity_range = (150, 300))
 
-create.create_predator(environment, radius = 50, velocity_range = (150, 300))
-
 # Create active action manager
 active_actions = active_actions.ActiveActions(environment)
 

@@ -3,37 +3,36 @@ import math
 import pyglet
 
 import util
-import color_maps
 import raster
 import agent
 
 class Predator():
 
-	def __init__(self,  environment):
+	def __init__(self,  environment, radius = 32, position = (0,0), speed = 10, direction = 0):
 		self.health = 100
 		
+		self.speed = speed
+		self.dir = direction # Radians, 0-2*pi
+		self.ang_v = 0 # Radians / second
+		self.radius = radius
+		self.x, self.y = position
 		
-		
-		self.kill = False  # Set to True to cause the agent to be removed
-		self.frozen_count = 0 # Count of consecutive updates where the predator has not performed an action
-		self.timeout_count = float('inf') # Count of consecutive frozen updates until agent is removed
+		self.kill = False  # Set to True to cause the predator to be removed
 		
 		self.distance_travelled = 0 # Tracks the total distance the agent has travelled over its life
 		self.environment = environment
 		self.terrain = environment.terrain
 		self.grid_size = self.terrain.grid_size
 		self.hash_map = {}
-	
-	def add_predator(self, radius = 50, position = (0,0), speed = 10, direction = 0):
-		self.speed = speed
-		self.dir = direction # Radians, 0-2*pi
-		self.radius = radius
-		self.ang_v = 1*math.pi
-		self.x, self.y = position
+		
 		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
 		self.put_in_map(bins)
 		
 	def update(self):
+	    # PREDATOR BEHAVIOR GOES HERE
+	
+		# Update direction with angular velocity
+		self.dir += self.ang_v * self.environment.dt
 		
 		# Generate x and y velocity from speed and direction
 		self.vx = self.speed * math.cos(self.dir)
@@ -46,16 +45,12 @@ class Predator():
 		# Calculate final location after move
 		dx = self.vx * self.environment.dt
 		dy = self.vy * self.environment.dt
-		self.terrain_collision_handler(dx, dy)
-				
-		# Check if agent is active
-		if abs(self.x - self.px) < .001 and abs(self.y - self.py) < .001:
-			self.frozen_count += 1
+		self.terrain_collision_handler(dx, dy)	
 		
-		# Mark agent for removal if it is not active for some time
-		if self.frozen_count >= self.timeout_count:
-			self.kill = True
-		
+		# Update hash map for predator
+		self.hash_map = {}
+		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
+		self.put_in_map(bins)
 
 	def put_in_map(self, bins):
 		# Put agent in bins
@@ -64,7 +59,6 @@ class Predator():
 				self.hash_map[bin] = set()
 			self.hash_map[bin].add(self)
 
-			
 	def terrain_collision_handler(self, dx, dy):
 		# Add velocity to get next position (assuming no collision)
 		self.nx = self.x + dx

@@ -3,7 +3,6 @@ import math
 import pyglet
 
 import util
-import color_maps
 import raster
 
 class Agent():
@@ -13,7 +12,7 @@ class Agent():
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
-		self.ang_v = 2*math.pi
+		self.ang_v = 0 # Radians / second
 	
 		self.swarm = swarm
 		self.id = id

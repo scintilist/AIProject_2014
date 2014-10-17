@@ -20,6 +20,7 @@ def create_terrain(environment, count = 10, scale = 100):
 		environment.terrain.add_block_by_points([(x1,y1), (x2,y2), (x3,y3), (x4,y4)])
 	
 def create_swarm(environment, count = 20, radius = 20, velocity_range = (0, 500)):
+	# Create agents
 	for n in range(count):
 		# Creates an agent at a random location and initial velocity, 
 		# but not overlapping any terrain
@@ -31,15 +32,3 @@ def create_swarm(environment, count = 20, radius = 20, velocity_range = (0, 500)
 		direction = random.uniform(0, math.pi*2)
 		speed = random.uniform(*velocity_range)
 		environment.swarm.add_new_agent(radius = radius, position = (x, y), speed = speed, direction = direction)
-		
-def create_predator(environment, radius = 50, velocity_range = 20):
-	# Creates an agent at a random location and initial velocity, 
-		# but not overlapping any terrain
-	while True:
-		x = random.uniform(0, environment.window.width)
-		y = random.uniform(0, environment.window.height)
-		if environment.terrain.distance_to_nearest((x, y)) > radius:
-			break
-	direction = random.uniform(0, math.pi*2)
-	speed = random.uniform(*velocity_range)
-	environment.predator.add_predator(radius = radius, position = (x, y), speed = speed, direction = direction)
