@@ -48,11 +48,23 @@ class Agent():
 	def get_inputs(self):
 		# Get terrain inputs
 		# Cast ray forward, and 45 degrees to each side, return list of collision distances
-		self.terrain_distance = self.get_terrain_input(200)
+		self.terrain_distance = self.get_terrain_input(view_range = 200)
+		# Get the distance to the predator if in range, or inf if not in range
+		# and the angle to rotate to face the predator, or 0 if predator not in range
+		self.predator_distance, self.predator_angle = self.get_predator_input(view_range = 200)
 		
 		#Kyle
 		# BREAK HERE
 		#Tyler
+		
+	def get_predator_input(self,view_range = 200):
+		predator_location = self.swarm.environment.predator.x, self.swarm.environment.predator.y
+		dist = util.distance(predator_location, (self.x, self.y))
+		if dist > view_range:
+			return float('inf'), 0
+		abs_angle = math.atan2(predator_location[1] - self.y, predator_location[0] - self.x)
+		rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
+		return dist, rel_angle
 		
 	def get_terrain_input(self, view_range = 200):
 		terrain_distance = []

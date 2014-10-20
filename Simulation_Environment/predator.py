@@ -29,6 +29,8 @@ class Predator():
 		self.put_in_map(bins)
 		
 	def update(self):
+		self.get_inputs()
+		
 	    # PREDATOR BEHAVIOR GOES HERE
 	
 		# Update direction with angular velocity
@@ -55,6 +57,53 @@ class Predator():
 		# Mark agent for removal if its health drops to 0 or less
 		if self.health <= 0:
 			self.kill = True
+			
+	def get_inputs(self):
+		# Get terrain inputs
+		# Cast ray forward, and 45 degrees to each side, return list of collision distances
+		self.terrain_distance = self.get_terrain_input(view_range = 200)
+		# Get the distance to the predator if in range, or inf if not in range
+		# and the angle to rotate to face the predator, or 0 if predator not in range
+		self.agent_distance, self.agent_angle = self.get_agent_input(view_range = 200)
+	
+	def get_agent_input(self,view_range = 200):
+		# find nearest agent
+		dist = view_range
+		closest_agent = False
+		for agent in self.environment.swarm.agents:
+			new_dist = util.distance((self.x, self.y),(agent.x, agent.y))
+			if new_dist < dist:
+				dist = new_dist
+				closest_agent = agent
+		if closest_agent:
+			abs_angle = math.atan2(closest_agent.y - self.y, closest_agent.x - self.x)
+			rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
+			return dist, rel_angle
+		else:
+			return float('inf'), 0
+		
+	def get_terrain_input(self, view_range = 200):
+		terrain_distance = []
+		for i in range(0,3):
+			angle = self.dir + (i-1) * math.pi/4 # Left 45deg, Center, Right 45deg
+			# Line from self.x,self.y to view_x, view_y
+			view_x = self.x + view_range * math.cos(angle)
+			view_y = self.y + view_range * math.sin(angle)
+			# Get set of terrain hash map bins crossed by line
+			bins = raster.line_bins(a = (self.x, self.y), b = (view_x, view_y), 
+				bin_size = self.terrain.grid_size)
+			# Get set of blocks contained in the set of bins
+			block_set = self.terrain.check_for_blocks(bins)
+			# Get distance to closest intersection
+			dist = view_range
+			for block in block_set:
+				for edge in block.edges:
+					intersection = util.intersect((self.x, self.y), (view_x, view_y), edge[0], edge[1])
+					if intersection:
+						new_dist = util.distance((self.x, self.y), intersection)
+						dist = min(dist, new_dist)
+			terrain_distance.append(dist)
+		return terrain_distance
 
 	def put_in_map(self, bins):
 		# Put agent in bins

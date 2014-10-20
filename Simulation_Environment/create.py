@@ -33,4 +33,4 @@ def create_random_swarm(environment, count = 20, radius = 20, velocity_range = (
 		environment.swarm.add_new_agent(radius = radius, position = (x, y), speed = speed, direction = direction)
 	
 def create_terrain_test_agents(environment):
-	environment.swarm.add_new_agent(radius = 20, position = (100, 300), speed = 10, direction = math.pi)
+	environment.swarm.add_new_agent(radius = 20, position = (100, 200), speed = 10, direction = math.pi)
