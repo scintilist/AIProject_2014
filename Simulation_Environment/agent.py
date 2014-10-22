@@ -65,6 +65,11 @@ class Agent():
 			if util.distance((self.x, self.y),(agent.x, agent.y)) < view_range:
 				nearby_agent_count += 1
 		return nearby_agent_count
+		
+	def attack(self):
+		if(self.predator_distance<self.radius+self.swarm.environment.predator.radius):
+			self.swarm.environment.predator.health=self.swarm.environment.predator.health-1
+			print(self.swarm.environment.predator.health)
 
 	def get_predator_input(self,view_range = 200):
 		predator_location = self.swarm.environment.predator.x, self.swarm.environment.predator.y

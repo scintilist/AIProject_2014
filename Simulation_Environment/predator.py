@@ -30,7 +30,7 @@ class Predator():
 		
 	def update(self):
 		self.get_inputs()
-		
+		self.attack()
 	    # PREDATOR BEHAVIOR GOES HERE
 	
 		# Update direction with angular velocity
@@ -65,7 +65,13 @@ class Predator():
 		# Get the distance to the predator if in range, or inf if not in range
 		# and the angle to rotate to face the predator, or 0 if predator not in range
 		# Also get the count of nearby agents within the view range
-		self.agent_distance, self.agent_angle, self.nearby_agent_count = self.get_agent_input(view_range = 200)
+		self.agent_distance, self.agent_angle, self.nearby_agent_count, self.closest_agent = self.get_agent_input(view_range = 200)
+	
+	def attack(self):
+		if(self.closest_agent):
+			if(self.agent_distance<self.radius+self.closest_agent.radius):
+				self.closest_agent.health=self.closest_agent.health-1
+				print(self.closest_agent.health)
 	
 	def get_agent_input(self,view_range = 200):
 		nearby_agent_count = 0
@@ -81,9 +87,9 @@ class Predator():
 		if closest_agent:
 			abs_angle = math.atan2(closest_agent.y - self.y, closest_agent.x - self.x)
 			rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
-			return dist, rel_angle, nearby_agent_count
+			return dist, rel_angle, nearby_agent_count, closest_agent
 		else:
-			return float('inf'), 0, nearby_agent_count
+			return float('inf'), 0, nearby_agent_count, closest_agent
 		
 	def get_terrain_input(self, view_range = 200):
 		terrain_distance = []

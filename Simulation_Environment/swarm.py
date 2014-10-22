@@ -37,7 +37,7 @@ class Swarm():
 	def update(self):
 		for agent in self.agents:
 			agent.get_inputs()
-	
+			agent.attack()
 		# BEHAVIOR CODE RUN HERE
 	
 		for agent in self.agents:
