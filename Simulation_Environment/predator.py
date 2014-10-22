@@ -9,7 +9,7 @@ import agent
 class Predator():
 
 	def __init__(self,  environment, radius = 32, position = (0,0), speed = 10, direction = 0):
-		self.health = 1000
+		self.health = 2000
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
@@ -33,12 +33,45 @@ class Predator():
 			# self.terrain_distance[0:2], self.agent_distance, self.agent_angle, self.nearby_agent_count, self.health
 		# Outputs
 			# self.speed, self.ang_v
-			
+		#print(self.nearby_agent_count)
+		
 		self.speed = 100
-		if self.terrain_distance[2] >= self.terrain_distance[0]:
-			self.ang_v = 1
+		if(self.nearby_agent_count==0):
+			if (self.terrain_distance[2] == self.terrain_distance[0] and self.terrain_distance[2] == 200):
+				print("hit 1")
+				self.ang_v = 0
+			elif (self.terrain_distance[2] >= self.terrain_distance[0] and self.terrain_distance[2] == 200):
+				print("hit 2")
+				self.ang_v = -1
+			elif (self.terrain_distance[2] <= self.terrain_distance[0] and self.terrain_distance[0] == 200):
+				print("hit 3")
+				self.ang_v = -1
+			elif (self.terrain_distance[2] <= self.terrain_distance[0] and self.terrain_distance[0] < 200):
+				print("hit 4")
+				self.ang_v = -1
+			elif (self.terrain_distance[2] >= self.terrain_distance[0] and self.terrain_distance[0] > 200):
+				print("hit 5")
+				self.ang_v = -1
+			else:
+				print("hit 6")
+				self.ang_v = -1
+		elif(self.nearby_agent_count>0 and self.nearby_agent_count<5):
+			if(self.agent_angle>0):
+				self.ang_v = 5
+			elif(self.agent_angle<0):
+				self.ang_v = -5
+			else:
+				self.ang_v = 0
+				
+			if(self.agent_distance < self.radius):
+				self.speed = 0
 		else:
-			self.ang_v = -1
+			if(self.agent_angle<3.14):
+				self.ang_v = -5
+			elif(self.agent_angle>-3.14):
+				self.ang_v = 5
+			else:
+				self.ang_v = 0
 	
 	def update(self):
 		self.get_inputs()
