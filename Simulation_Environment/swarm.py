@@ -4,6 +4,9 @@ import agent_behavior
 
 class Swarm():
 	def __init__(self, environment, behavior_data):
+		self.initial_health = 100
+		self.view_range = 200
+		
 		self.behavior = agent_behavior.Agent_Behavior(behavior_data)
 		# Empty list of agents in the swarm
 		self.agents = []

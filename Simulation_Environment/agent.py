@@ -11,7 +11,8 @@ class Agent():
 		self.swarm = swarm
 		self.id = id
 
-		self.health = 100
+		self.health = self.swarm.initial_health
+		self.view_range = self.swarm.view_range
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
@@ -26,7 +27,8 @@ class Agent():
 		
 	def update(self):
 		# Unpack behavior outputs
-		self.ang_v, self.speed = self.output_data
+		self.speed = self.output_data[0] * 100
+		self.ang_v = self.output_data[1] * 10
 	
 		# Update direction with angular velocity
 		self.dir += self.ang_v * self.swarm.environment.dt
@@ -50,16 +52,23 @@ class Agent():
 			
 	def get_inputs(self):
 		# Get terrain inputs
-		# Cast ray forward, and 45 degrees to each side, return list of collision distances
-		self.terrain_distance = self.get_terrain_input(view_range = 200)
+		# Cast ray 45 degrees to each side, return list of collision distances
+		self.terrain_distance = self.get_terrain_input(self.view_range)
 		# Get the distance to the predator if in range, or inf if not in range
 		# and the angle to rotate to face the predator, or 0 if predator not in range
-		self.predator_distance, self.predator_angle = self.get_predator_input(view_range = 200)
+		self.predator_distance, self.predator_angle = self.get_predator_input(self.view_range)
 		# Get the count of nearby agents within the view range
-		self.nearby_agent_count = self.get_nearby_agent_count(view_range = 200)
+		self.nearby_agent_count = self.get_nearby_agent_count(self.view_range)
+		
 		# Package up all inputs for behavior code processing
-		self.input_data = (self.terrain_distance[0], self.terrain_distance[1], self.terrain_distance[2],
-			self.predator_distance, self.predator_angle, self.nearby_agent_count, self.health)
+		self.input_data = []
+		# Normalize all values to the range 0-1, then append
+		self.input_data.append( self.terrain_distance[0] / self.view_range )
+		self.input_data.append( self.terrain_distance[1] / self.view_range )
+		self.input_data.append( self.predator_distance / self.view_range )
+		self.input_data.append( (self.predator_angle / (2 * math.pi)) + .5 )
+		self.input_data.append( self.nearby_agent_count / len(self.swarm.agents) )
+		self.input_data.append( self.health / self.swarm.initial_health )
 		
 	def get_nearby_agent_count(self, view_range = 200):
 		nearby_agent_count = -1 # Compensate for detecting itself
@@ -72,15 +81,15 @@ class Agent():
 		predator_location = self.swarm.environment.predator.x, self.swarm.environment.predator.y
 		dist = util.distance(predator_location, (self.x, self.y))
 		if dist > view_range:
-			return float('inf'), 0
+			return view_range, 0
 		abs_angle = math.atan2(predator_location[1] - self.y, predator_location[0] - self.x)
 		rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
 		return dist, rel_angle
 		
 	def get_terrain_input(self, view_range = 200):
 		terrain_distance = []
-		for i in range(0,3):
-			angle = self.dir + (i-1) * math.pi/4 # Left 45deg, Center, Right 45deg
+		for i in range(0,2):
+			angle = self.dir + (i - .5) * math.pi / 2 # Left 45deg, Right 45deg
 			# Line from self.x,self.y to view_x, view_y
 			view_x = self.x + view_range * math.cos(angle)
 			view_y = self.y + view_range * math.sin(angle)
@@ -98,7 +107,7 @@ class Agent():
 						new_dist = util.distance((self.x, self.y), intersection)
 						dist = min(dist, new_dist)
 			terrain_distance.append(dist)
-		return terrain_distance
+		return tuple(terrain_distance)
 			
 	def attack(self):
 		if(self.predator_distance < self.radius + self.swarm.environment.predator.radius):
@@ -200,16 +209,16 @@ class Agent():
 		
 		# OPTOMIZE VERTEX GENERATION
 		
-		# Draw the agent dirction mark, from center to edge
+		# field of view
 		pyglet.gl.glColor4f(0,0,0,.5)
 		pyglet.gl.glLineWidth(3)
 		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
 			(self.x, self.y, 
-			self.x + 200 * math.cos(self.dir + math.pi/4), self.y + 200 * math.sin(self.dir + math.pi/4)) ) )
+			self.x + self.view_range * math.cos(self.dir + math.pi/4), self.y + self.view_range * math.sin(self.dir + math.pi/4)) ) )
 			
-		# Draw the agent dirction mark, from center to edge
+		# field of view
 		pyglet.gl.glColor4f(0,0,0,.5)
 		pyglet.gl.glLineWidth(3)
 		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
 			(self.x, self.y, 
-			self.x + 200 * math.cos(self.dir - math.pi/4), self.y + 200 * math.sin(self.dir - math.pi/4)) ) )
+			self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)) ) )
