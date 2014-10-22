@@ -27,11 +27,25 @@ class Predator():
 		
 		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
 		self.put_in_map(bins)
-		
+	
+	def behavior(self):
+		# Inputs
+			# self.terrain_distance[0:2], self.agent_distance, self.agent_angle, self.nearby_agent_count, self.health
+		# Outputs
+			# self.speed, self.ang_v
+			
+		self.speed = 100
+		if self.terrain_distance[2] >= self.terrain_distance[0]:
+			self.ang_v = 1
+		else:
+			self.ang_v = -1
+	
 	def update(self):
 		self.get_inputs()
 		self.attack()
-	    # PREDATOR BEHAVIOR GOES HERE
+		
+	    # Run predator behavior
+		self.behavior()
 	
 		# Update direction with angular velocity
 		self.dir += self.ang_v * self.environment.dt

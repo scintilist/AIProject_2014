@@ -8,14 +8,14 @@ import raster
 class Agent():
 
 	def __init__(self, swarm, id, radius = 16, position = (0,0), speed = 10, direction = 0):
+		self.swarm = swarm
+		self.id = id
+
 		self.health = 100
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
 		self.ang_v = 0 # Radians / second
-	
-		self.swarm = swarm
-		self.id = id
 		
 		self.kill = False  # Set to True to cause the agent to be removed
 		
@@ -25,6 +25,9 @@ class Agent():
 		self.distance_travelled = 0 # Tracks the total distance the agent has travelled over its life
 		
 	def update(self):
+		# Unpack behavior outputs
+		self.ang_v, self.speed = self.output_data
+	
 		# Update direction with angular velocity
 		self.dir += self.ang_v * self.swarm.environment.dt
 		
@@ -54,6 +57,9 @@ class Agent():
 		self.predator_distance, self.predator_angle = self.get_predator_input(view_range = 200)
 		# Get the count of nearby agents within the view range
 		self.nearby_agent_count = self.get_nearby_agent_count(view_range = 200)
+		# Package up all inputs for behavior code processing
+		self.input_data = (self.terrain_distance[0], self.terrain_distance[1], self.terrain_distance[2],
+			self.predator_distance, self.predator_angle, self.nearby_agent_count, self.health)
 		
 	def get_nearby_agent_count(self, view_range = 200):
 		nearby_agent_count = -1 # Compensate for detecting itself

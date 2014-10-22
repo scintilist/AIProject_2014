@@ -12,7 +12,7 @@ import util
 # environmental information such as time
 
 class Environment():
-	def __init__(self, dt, sim_time, window, hash_map_grid_size, show_bins = False):
+	def __init__(self, agent_behavior_data, dt, sim_time, window, hash_map_grid_size, show_bins = False):
 		self.show_bins = show_bins
 	
 		self.sim_time = sim_time
@@ -20,7 +20,7 @@ class Environment():
 		self.update_time_out = .02 # Set update time out interval in seconds
 		self.window = window # The window the environment is being displayed in
 		self.terrain = terrain.Terrain(self, hash_map_grid_size)
-		self.swarm = swarm.Swarm(self)
+		self.swarm = swarm.Swarm(self, agent_behavior_data)
 		
 		# Create predator
 		self.predator = predator.Predator(self, radius = 32, position = (700, 300), speed = 50, direction = math.pi)
