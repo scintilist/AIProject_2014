@@ -52,11 +52,20 @@ class Agent():
 		# Get the distance to the predator if in range, or inf if not in range
 		# and the angle to rotate to face the predator, or 0 if predator not in range
 		self.predator_distance, self.predator_angle = self.get_predator_input(view_range = 200)
+		# Get the count of nearby agents within the view range
+		self.nearby_agent_count = self.get_nearby_agent_count(view_range = 200)
 		
 		#Kyle
 		# BREAK HERE
 		#Tyler
 		
+	def get_nearby_agent_count(self, view_range = 200):
+		nearby_agent_count = -1 # Compensate for detecting itself
+		for agent in self.swarm.agents:
+			if util.distance((self.x, self.y),(agent.x, agent.y)) < view_range:
+				nearby_agent_count += 1
+		return nearby_agent_count
+
 	def get_predator_input(self,view_range = 200):
 		predator_location = self.swarm.environment.predator.x, self.swarm.environment.predator.y
 		dist = util.distance(predator_location, (self.x, self.y))

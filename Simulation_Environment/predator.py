@@ -64,23 +64,26 @@ class Predator():
 		self.terrain_distance = self.get_terrain_input(view_range = 200)
 		# Get the distance to the predator if in range, or inf if not in range
 		# and the angle to rotate to face the predator, or 0 if predator not in range
-		self.agent_distance, self.agent_angle = self.get_agent_input(view_range = 200)
+		# Also get the count of nearby agents within the view range
+		self.agent_distance, self.agent_angle, self.nearby_agent_count = self.get_agent_input(view_range = 200)
 	
 	def get_agent_input(self,view_range = 200):
-		# find nearest agent
+		nearby_agent_count = 0
 		dist = view_range
 		closest_agent = False
 		for agent in self.environment.swarm.agents:
 			new_dist = util.distance((self.x, self.y),(agent.x, agent.y))
-			if new_dist < dist:
-				dist = new_dist
-				closest_agent = agent
+			if new_dist < view_range:
+				nearby_agent_count += 1
+				if new_dist < dist:
+					dist = new_dist
+					closest_agent = agent
 		if closest_agent:
 			abs_angle = math.atan2(closest_agent.y - self.y, closest_agent.x - self.x)
 			rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
-			return dist, rel_angle
+			return dist, rel_angle, nearby_agent_count
 		else:
-			return float('inf'), 0
+			return float('inf'), 0, nearby_agent_count
 		
 	def get_terrain_input(self, view_range = 200):
 		terrain_distance = []
