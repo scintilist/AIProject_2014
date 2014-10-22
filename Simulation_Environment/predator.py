@@ -38,22 +38,16 @@ class Predator():
 		self.speed = 100
 		if(self.nearby_agent_count==0):
 			if (self.terrain_distance[2] == self.terrain_distance[0] and self.terrain_distance[2] == 200):
-				print("hit 1")
 				self.ang_v = 0
 			elif (self.terrain_distance[2] >= self.terrain_distance[0] and self.terrain_distance[2] == 200):
-				print("hit 2")
 				self.ang_v = -1
 			elif (self.terrain_distance[2] <= self.terrain_distance[0] and self.terrain_distance[0] == 200):
-				print("hit 3")
 				self.ang_v = -1
 			elif (self.terrain_distance[2] <= self.terrain_distance[0] and self.terrain_distance[0] < 200):
-				print("hit 4")
 				self.ang_v = -1
 			elif (self.terrain_distance[2] >= self.terrain_distance[0] and self.terrain_distance[0] > 200):
-				print("hit 5")
 				self.ang_v = -1
-			else:
-				print("hit 6")
+			else
 				self.ang_v = -1
 		elif(self.nearby_agent_count>0 and self.nearby_agent_count<5):
 			if(self.agent_angle>0):
