@@ -55,21 +55,12 @@ class Agent():
 		# Get the count of nearby agents within the view range
 		self.nearby_agent_count = self.get_nearby_agent_count(view_range = 200)
 		
-		#Kyle
-		# BREAK HERE
-		#Tyler
-		
 	def get_nearby_agent_count(self, view_range = 200):
 		nearby_agent_count = -1 # Compensate for detecting itself
 		for agent in self.swarm.agents:
 			if util.distance((self.x, self.y),(agent.x, agent.y)) < view_range:
 				nearby_agent_count += 1
 		return nearby_agent_count
-		
-	def attack(self):
-		if(self.predator_distance<self.radius+self.swarm.environment.predator.radius):
-			self.swarm.environment.predator.health=self.swarm.environment.predator.health-1
-			print(self.swarm.environment.predator.health)
 
 	def get_predator_input(self,view_range = 200):
 		predator_location = self.swarm.environment.predator.x, self.swarm.environment.predator.y
@@ -103,6 +94,11 @@ class Agent():
 			terrain_distance.append(dist)
 		return terrain_distance
 			
+	def attack(self):
+		if(self.predator_distance < self.radius + self.swarm.environment.predator.radius):
+			self.swarm.environment.predator.health = self.swarm.environment.predator.health - 1
+			print(self.swarm.environment.predator.health)
+	
 	def terrain_collision_handler(self, dx, dy):
 		# Add velocity to get next position (assuming no collision)
 		self.nx = self.x + dx

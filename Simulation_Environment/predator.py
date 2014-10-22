@@ -67,12 +67,6 @@ class Predator():
 		# Also get the count of nearby agents within the view range
 		self.agent_distance, self.agent_angle, self.nearby_agent_count, self.closest_agent = self.get_agent_input(view_range = 200)
 	
-	def attack(self):
-		if(self.closest_agent):
-			if(self.agent_distance<self.radius+self.closest_agent.radius):
-				self.closest_agent.health=self.closest_agent.health-1
-				print(self.closest_agent.health)
-	
 	def get_agent_input(self,view_range = 200):
 		nearby_agent_count = 0
 		dist = view_range
@@ -113,6 +107,11 @@ class Predator():
 						dist = min(dist, new_dist)
 			terrain_distance.append(dist)
 		return terrain_distance
+		
+	def attack(self):
+		if(self.closest_agent):
+			if(self.agent_distance < self.radius + self.closest_agent.radius):
+				self.closest_agent.health = self.closest_agent.health - 1
 
 	def put_in_map(self, bins):
 		# Put agent in bins
