@@ -7,7 +7,7 @@ import agent
 import swarm
 import block
 import terrain
-import action
+import interaction
 
 class EventHandlers():
 	def __init__(self, environment, active_actions):
