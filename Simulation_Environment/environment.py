@@ -12,13 +12,15 @@ import util
 # environmental information such as time
 
 class Environment():
-	def __init__(self, agent_behavior_data, dt, sim_time, window, hash_map_grid_size, show_bins = False):
+	def __init__(self, agent_behavior_data, dt, sim_time, time_out, hash_map_grid_size, width = 800, height = 600, show_bins = False):
 		self.show_bins = show_bins
 	
 		self.sim_time = sim_time
+		self.time_out = time_out # Simulation time out in seconds
 		self.dt = dt # Set the time step in seconds used for calculations (100fps = .01).
 		self.update_time_out = .02 # Set update time out interval in seconds
-		self.window = window # The window the environment is being displayed in
+		self.height = height
+		self.width = width
 		self.terrain = terrain.Terrain(self, hash_map_grid_size)
 		self.swarm = swarm.Swarm(self, agent_behavior_data)
 		
@@ -32,6 +34,21 @@ class Environment():
 		# get the real time of the simulation start (with added 1 second delay for loading the window)
 		self.real_time_start = time.perf_counter() + 1
 		
+	def run_sim_no_gfx(self):
+		while (self.sim_time < self.time_out  and	# Time out
+				len(self.swarm.agents) > 0 and		# All agents dead
+				not self.predator.is_kill):			# Predator is dead
+			self.sim_time += self.dt
+			self.swarm.update()
+			self.predator.update()
+		
+		total_agent_health = 0
+		for agent in self.swarm.agents:
+			total_agent_health += agent.health
+		
+		return self.sim_time, len(self.swarm.agents), total_agent_health, self.predator.health
+			
+		
 	def update(self):
 		if not self.paused:
 			calc_start_time = time.perf_counter() # Get calculation start time
@@ -41,6 +58,12 @@ class Environment():
 				self.sim_time += self.dt
 				self.swarm.update()
 				self.predator.update()
+				
+				# Check termination conditions
+				if (self.sim_time > self.time_out  or	# Time out
+					len(self.swarm.agents) == 0 or		# All agents dead
+					self.predator.is_kill):				# Predator is dead
+					terminate = True
 	
 	def draw(self):
 		self.terrain.draw()
@@ -67,8 +90,8 @@ class Environment():
 	
 	def create_perimeter_walls(self, location = 'outside', thickness = 10):
 		s = 1 if location == 'inside' else -1
-		w = self.window.width
-		h = self.window.height
+		w = self.width
+		h = self.height
 		t = thickness
 		self.terrain.add_block_by_points([(w,h), (0,h), (0,h-t*s), (w,h-t*s)]) # Top
 		self.terrain.add_block_by_points([(0,0), (w,0), (w,t*s),   (0,t*s)  ]) # Bottom

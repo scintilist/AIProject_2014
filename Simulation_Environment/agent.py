@@ -18,7 +18,7 @@ class Agent():
 		self.dir = direction # Radians, 0-2*pi
 		self.ang_v = 0 # Radians / second
 		
-		self.kill = False  # Set to True to cause the agent to be removed
+		self.is_kill = False  # Set to True to cause the agent to be removed
 		
 		self.radius = radius
 		self.x, self.y = position
@@ -28,7 +28,7 @@ class Agent():
 	def update(self):
 		# Unpack behavior outputs
 		self.speed = self.output_data[0] * 100
-		self.ang_v = self.output_data[1] * 10
+		self.ang_v = self.output_data[1] * 20 - 10
 	
 		# Update direction with angular velocity
 		self.dir += self.ang_v * self.swarm.environment.dt
@@ -48,7 +48,7 @@ class Agent():
 			
 		# Mark agent for removal if its health drops to 0 or less
 		if self.health <= 0:
-			self.kill = True
+			self.is_kill = True
 			
 	def get_inputs(self):
 		# Get terrain inputs
