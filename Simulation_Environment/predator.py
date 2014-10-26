@@ -17,7 +17,7 @@ class Predator():
 		self.radius = radius
 		self.x, self.y = position
 		
-		self.kill = False  # Set to True to cause the predator to be removed
+		self.is_kill = False  # Set to True to cause the predator to be removed
 		
 		self.distance_travelled = 0 # Tracks the total distance the agent has travelled over its life
 		self.environment = environment
@@ -96,9 +96,9 @@ class Predator():
 		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
 		self.put_in_map(bins)
 		
-		# Mark agent for removal if its health drops to 0 or less
+		# Mark predator for removal if its health drops to 0 or less
 		if self.health <= 0:
-			self.kill = True
+			self.is_kill = True
 			
 	def get_inputs(self):
 		# Get terrain inputs

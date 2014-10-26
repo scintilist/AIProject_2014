@@ -36,8 +36,9 @@ def update(realtime_dt):
 
 # Create and initialize environment
 agent_behavior_data = 0
-environment = environment.Environment(agent_behavior_data, dt = .015, sim_time = 0, window = window, 
-										hash_map_grid_size = 40, show_bins = False)
+environment = environment.Environment(agent_behavior_data, dt = .015, sim_time = 0, time_out = 100
+	hash_map_grid_size = 40, width = 800, height = 600, show_bins = False)
+	
 environment.create_perimeter_walls(location = 'inside', thickness = 5)
 # Create terrain
 #create.create_random_terrain(environment, count = 30, scale = 60)

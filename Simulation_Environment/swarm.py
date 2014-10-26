@@ -54,7 +54,7 @@ class Swarm():
 			
 		# Prune agents marked for removal
 		for i, agent in enumerate(self.agents):
-			if agent.kill:
+			if agent.is_kill:
 				del self.agents[i]
 				
 		# Update hash map for all agents
