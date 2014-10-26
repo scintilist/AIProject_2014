@@ -8,6 +8,7 @@ class Agent_Behavior():
 			self.weight.append([])
 			for input in range(6):
 				self.weight[output].append(random.uniform(-1,1))
+		print(self.weight)
 	
 	def run(self, input_data = [0,0,0,0,0,0]):
 		# Inputs and outputs normalized to the range 0-1

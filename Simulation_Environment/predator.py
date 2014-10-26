@@ -70,6 +70,7 @@ class Predator():
 	def update(self):
 		self.get_inputs()
 		self.attack()
+		print(self.health)
 		
 	    # Run predator behavior
 		self.behavior()

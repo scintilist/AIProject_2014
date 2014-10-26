@@ -1,13 +1,15 @@
 import agent
 import raster
 import agent_behavior
+import agent_behavior_base
 
 class Swarm():
 	def __init__(self, environment, behavior_data):
 		self.initial_health = 100
 		self.view_range = 200
 		
-		self.behavior = agent_behavior.Agent_Behavior(behavior_data)
+		# self.behavior = agent_behavior.Agent_Behavior(behavior_data)
+		self.behavior = agent_behavior_base.Agent_Behavior_Base(behavior_data)
 		# Empty list of agents in the swarm
 		self.agents = []
 		# Id number of the next agent to be created

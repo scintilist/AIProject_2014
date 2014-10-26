@@ -42,8 +42,8 @@ environment.create_perimeter_walls(location = 'inside', thickness = 5)
 # Create terrain
 #create.create_random_terrain(environment, count = 30, scale = 60)
 # Create instances of agents
-#create.create_random_swarm(environment, count = 10, radius = 20, velocity_range = (150, 300))
-create.create_terrain_test_agents(environment)
+create.create_random_swarm(environment, count = 10, radius = 20, velocity_range = (150, 300))
+#create.create_terrain_test_agents(environment)
 
 # Create active action manager
 active_actions = active_actions.ActiveActions(environment)
