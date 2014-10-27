@@ -63,5 +63,5 @@ active_actions = active_actions.ActiveActions(environment)
 
 pyglet.clock.schedule_interval(update, 1/120) # Update display 60 times per second
 
-window.push_handlers(event_handlers.EventHandlers(environment, active_actions))
+window.push_handlers(event_handlers.EventHandlers(environment, window, active_actions))
 pyglet.app.run() # Run pyglet

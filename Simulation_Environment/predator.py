@@ -9,9 +9,11 @@ import agent
 class Predator():
 
 	def __init__(self,  environment, radius = 32, position = (0,0), speed = 10, direction = 0):
-		self.health = 2000
+		self.initial_health = 2000
 		self.dps = 50
+		self.view_range = 200
 		
+		self.health = self.initial_health
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
 		self.ang_v = 0 # Radians / second
@@ -104,11 +106,11 @@ class Predator():
 	def get_inputs(self):
 		# Get terrain inputs
 		# Cast ray forward, and 45 degrees to each side, return list of collision distances
-		self.terrain_distance = self.get_terrain_input(view_range = 200)
+		self.terrain_distance = self.get_terrain_input(self.view_range)
 		# Get the distance to the predator if in range, or inf if not in range
 		# and the angle to rotate to face the predator, or 0 if predator not in range
 		# Also get the count of nearby agents within the view range
-		self.agent_distance, self.agent_angle, self.nearby_agent_count, self.closest_agent = self.get_agent_input(view_range = 200)
+		self.agent_distance, self.agent_angle, self.nearby_agent_count, self.closest_agent = self.get_agent_input(self.view_range)
 	
 	def get_agent_input(self,view_range = 200):
 		nearby_agent_count = 0
@@ -235,14 +237,43 @@ class Predator():
 				self.dir += math.pi
 					
 	def draw(self, color = (0,0,1,1)):
-		# Draw the agent body circle
+			
+		# Draw field of view
+		# field of view
+		#pyglet.gl.glColor4f(0,0,0,.5)
+		#pyglet.gl.glLineWidth(3)
+		#pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+		#	(self.x, self.y, 
+		#	self.x + self.view_range * math.cos(self.dir + math.pi/4), self.y + self.view_range * math.sin(self.dir + math.pi/4)) ) )
+			
+		# field of view
+		#pyglet.gl.glColor4f(0,0,0,.5)
+		#pyglet.gl.glLineWidth(3)
+		#pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+		#	(self.x, self.y, 
+		#	self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)) ) )
+		
+		# Draw the predator body circle
 		pyglet.gl.glPointSize(self.radius*2)
 		pyglet.gl.glColor4f(*color)
 		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )
 		
-		# Draw the agent dirction mark, from center to edge
+		# Draw the predator dirction mark, from center to edge
 		pyglet.gl.glColor4f(0,0,0,1)
 		pyglet.gl.glLineWidth(3)
 		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
 			(self.x, self.y, 
 			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
+			
+		# Draw the predator dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,1)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
+		
+		# Draw the predator health circle
+		pyglet.gl.glPointSize(self.radius)
+		v = self.health / self.initial_health
+		pyglet.gl.glColor4f(v,v,v,1)
+		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )

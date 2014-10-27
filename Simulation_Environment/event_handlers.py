@@ -10,7 +10,8 @@ import terrain
 import interaction
 
 class EventHandlers():
-	def __init__(self, environment, active_actions):
+	def __init__(self, environment, window, active_actions):
+		self.window = window
 		self.environment = environment
 		self.active_actions = active_actions
 		
@@ -70,17 +71,17 @@ class EventHandlers():
 		# Remove object
 		elif symbol == key.DELETE or symbol == key.BACKSPACE:
 			self.active_actions.clear_state()
-			action.DeleteObject(self.environment, self.active_actions)
+			interaction.DeleteObject(self.environment, self.window, self.active_actions)
 		
 		# Draw block
 		elif symbol == key.D:
 			self.active_actions.clear_state()
-			action.DrawPolygon(self.environment, self.active_actions)
+			interaction.DrawPolygon(self.environment, self.window, self.active_actions)
 		
 		#  Place Agent
 		elif symbol == key.A:
 			self.active_actions.clear_state()
-			action.PlaceAgent(self.environment, self.active_actions)
+			interaction.PlaceAgent(self.environment, self.window, self.active_actions)
 			
 		return True
 	

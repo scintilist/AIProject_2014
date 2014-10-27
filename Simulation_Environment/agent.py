@@ -189,30 +189,7 @@ class Agent():
 				self.dir += math.pi
 					
 	def draw(self, color = (0,1,0,1)):
-		# Draw the agent body circle
-		pyglet.gl.glPointSize(self.radius*2)
-		pyglet.gl.glColor4f(*color)
-		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )
-		
-		# Draw the agent dirction mark, from center to edge
-		pyglet.gl.glColor4f(0,0,0,1)
-		pyglet.gl.glLineWidth(3)
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
-			(self.x, self.y, 
-			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
-			
-			
-		# Draw the agent dirction mark, from center to edge
-		pyglet.gl.glColor4f(0,0,0,1)
-		pyglet.gl.glLineWidth(3)
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
-			(self.x, self.y, 
-			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
-		
 		# Draw field of view
-		
-		# OPTOMIZE VERTEX GENERATION
-		
 		# field of view
 		pyglet.gl.glColor4f(0,0,0,.5)
 		pyglet.gl.glLineWidth(3)
@@ -226,3 +203,28 @@ class Agent():
 		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
 			(self.x, self.y, 
 			self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)) ) )
+		
+		# Draw the agent body circle
+		pyglet.gl.glPointSize(self.radius*2)
+		pyglet.gl.glColor4f(*color)
+		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )
+		
+		# Draw the agent dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,1)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
+			
+		# Draw the agent dirction mark, from center to edge
+		pyglet.gl.glColor4f(0,0,0,1)
+		pyglet.gl.glLineWidth(3)
+		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
+			(self.x, self.y, 
+			self.x + self.radius * math.cos(self.dir), self.y + self.radius * math.sin(self.dir)) ) )
+		
+		# Draw the agent health circle
+		pyglet.gl.glPointSize(self.radius)
+		v = self.health / self.swarm.initial_health
+		pyglet.gl.glColor4f(v,v,v,1)
+		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )

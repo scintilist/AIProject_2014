@@ -9,21 +9,22 @@ import block
 import agent
 
 class Action():
-	def __init__(self, environment, active_actions):
+	def __init__(self, environment, window, active_actions):
 		self.active_actions = active_actions
 		self.environment = environment
+		self.window = window
 		active_actions.active.append(self)
 		
 	def start_new_action(self):
-		self.environment.window.pop_handlers()
+		self.window.pop_handlers()
 		# Push self to the undo stack and create new instance
 		self.active_actions.undo.append(self)
 		self.active_actions.active.remove(self)
-		self.__class__(self.environment, self.active_actions)
+		self.__class__(self.environment, self.window, self.active_actions)
 		
 	def exit(self):
 		self.active_actions.active.remove(self)
-		self.environment.window.pop_handlers()
+		self.window.pop_handlers()
 		
 	def draw(self):
 		pass
@@ -33,12 +34,12 @@ class Action():
 
 
 class DeleteObject(Action):
-	def __init__(self, environment, active_actions):
-		super().__init__(environment, active_actions)
+	def __init__(self, environment, window, active_actions):
+		super().__init__(environment, window, active_actions)
 		self.mouse_over_object = False
 		self.get_mouse_over_object(self.environment.mouse_x, self.environment.mouse_y)
 		
-		self.environment.window.push_handlers(self.on_mouse_press, self.on_key_press)
+		self.window.push_handlers(self.on_mouse_press, self.on_key_press)
 		
 	def undo(self):
 		if isinstance(self.mouse_over_object, agent.Agent):
@@ -97,10 +98,10 @@ class DeleteObject(Action):
 	
 
 class PlaceAgent(Action):
-	def __init__(self, environment, active_actions):
-		super().__init__(environment, active_actions)
+	def __init__(self, environment, window, active_actions):
+		super().__init__(environment, window, active_actions)
 		self.radius = 20
-		self.environment.window.push_handlers(self.on_mouse_release, self.on_key_press)
+		self.window.push_handlers(self.on_mouse_release, self.on_key_press)
 		
 	def undo(self):
 		self.environment.swarm.remove_agent(self.agent)
@@ -126,14 +127,14 @@ class PlaceAgent(Action):
 		
 		
 class DrawPolygon(Action):
-	def __init__(self, environment, active_actions):
-		super().__init__(environment, active_actions)
+	def __init__(self, environment, window, active_actions):
+		super().__init__(environment, window, active_actions)
 		self.poly = [] # List of polygon coordinates
 		self.vertices = []
 		self.close_distance = 20 # Radius around the start point to detect the end of the polygon
 		self.blocks = []
 		
-		self.environment.window.push_handlers(self.on_mouse_press, self.on_key_press)
+		self.window.push_handlers(self.on_mouse_press, self.on_key_press)
 		
 	def undo(self):
 		for block in self.blocks:
