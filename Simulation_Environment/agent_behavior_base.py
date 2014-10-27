@@ -19,14 +19,12 @@ class Agent_Behavior_Base():
 		for i, input in enumerate(input_data):
 			total += self.weight[0][i] * input_data[i]
 			# limit output to the range 
-			
-		
 		if total<=500:
 			output_data[0]=10
-			if(input_data[3]>2):
-				self.ang_v = 5
-			elif(input_data[3]<-2):
-				self.ang_v = -5
+			if(input_data[3]>2.5):
+				self.ang_v = .5
+			elif(input_data[3]<-2.5):
+				self.ang_v = -.5
 			else:
 				self.ang_v = 0
 			
