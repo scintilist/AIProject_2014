@@ -27,6 +27,9 @@ class Agent():
 		
 	def update(self):
 		# Unpack behavior outputs
+		for i, data in enumerate(self.output_data):
+			self.output_data[i] = max(min(data, 1), 0)
+			
 		self.speed = self.output_data[0] * 100
 		self.ang_v = self.output_data[1] * 20 - 10
 	

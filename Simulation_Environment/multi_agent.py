@@ -13,6 +13,8 @@ import create
 import environment
 import event_handlers
 import active_actions
+import agent_behavior
+import agent_behavior_base
 
 # Set up graphical window
 config = Config(double_buffer=True, depth_size=0, sample_buffers=1, samples=8)
@@ -35,8 +37,9 @@ def update(realtime_dt):
 	active_actions.update()
 
 # Create and initialize environment
-agent_behavior_data = 0
-environment = environment.Environment(agent_behavior_data, dt = .015, sim_time = 0, time_out = 100, hash_map_grid_size = 40, width = 800, height = 600, show_bins = False)
+agent_behavior_function = agent_behavior_base.Agent_Behavior_Base()
+environment = environment.Environment(agent_behavior_function, dt = .015, sim_time = 0, time_out = 100,
+	hash_map_grid_size = 40, width = 800, height = 600, show_bins = False)
 	
 environment.create_perimeter_walls(location = 'inside', thickness = 5)
 # Create terrain
