@@ -10,6 +10,7 @@ class Predator():
 
 	def __init__(self,  environment, radius = 32, position = (0,0), speed = 10, direction = 0):
 		self.health = 2000
+		self.dps = 50
 		
 		self.speed = speed
 		self.dir = direction # Radians, 0-2*pi
@@ -153,7 +154,7 @@ class Predator():
 	def attack(self):
 		if(self.closest_agent):
 			if(self.agent_distance < self.radius + self.closest_agent.radius):
-				self.closest_agent.health = self.closest_agent.health - 1
+				self.closest_agent.health = self.closest_agent.health - self.environment.dt * self.dps
 
 	def put_in_map(self, bins):
 		# Put agent in bins

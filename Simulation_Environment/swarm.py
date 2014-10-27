@@ -4,6 +4,7 @@ import raster
 class Swarm():
 	def __init__(self, environment, behavior_function):
 		self.initial_health = 100
+		self.agent_dps = 50
 		self.view_range = 200
 		
 		# self.behavior = agent_behavior.Agent_Behavior(behavior_data)
@@ -44,7 +45,7 @@ class Swarm():
 			agent.get_inputs()
 			agent.attack()
 			# Run agent behavior code
-			agent.output_data = self.behavior_function.run(agent.input_data)
+			agent.output_data = self.behavior_function(agent.input_data)
 		
 	
 		for agent in self.agents:

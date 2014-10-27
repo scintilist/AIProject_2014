@@ -12,6 +12,7 @@ class Agent():
 		self.id = id
 
 		self.health = self.swarm.initial_health
+		self.dps = self.swarm.agent_dps
 		self.view_range = self.swarm.view_range
 		
 		self.speed = speed
@@ -114,7 +115,7 @@ class Agent():
 			
 	def attack(self):
 		if(self.predator_distance < self.radius + self.swarm.environment.predator.radius):
-			self.swarm.environment.predator.health = self.swarm.environment.predator.health - 1
+			self.swarm.environment.predator.health = self.swarm.environment.predator.health - self.swarm.environment.dt * self.dps
 	
 	def terrain_collision_handler(self, dx, dy):
 		# Add velocity to get next position (assuming no collision)

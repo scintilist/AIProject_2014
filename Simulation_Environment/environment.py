@@ -63,7 +63,16 @@ class Environment():
 				if (self.sim_time > self.time_out  or	# Time out
 					len(self.swarm.agents) == 0 or		# All agents dead
 					self.predator.is_kill):				# Predator is dead
-					terminate = True
+					
+					total_agent_health = 0
+					for agent in self.swarm.agents:
+						total_agent_health += agent.health
+					
+					print("time = ", self.sim_time)
+					print("survivor_count = ", len(self.swarm.agents))
+					print("total_agent_health = ", total_agent_health)
+					print("predator_health = ", self.predator.health)
+					return "terminate"
 	
 	def draw(self):
 		self.terrain.draw()

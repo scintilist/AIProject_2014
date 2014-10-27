@@ -13,11 +13,21 @@ import create
 import environment
 import agent_behavior
 import agent_behavior_base
+import agent_behavior_base_2
 
 # Create and initialize environment
-agent_behavior_function = agent_behavior_base.Agent_Behavior_Base()
-environment = environment.Environment(agent_behavior_function, dt = .01, sim_time = 0, time_out = 10,
+
+# Baseline
+agent_behavior_function = agent_behavior_base_2.behavior
+
+# Random behavior
+#behavior_data = 0
+#agent_behavior = agent_behavior.Agent_Behavior(behavior_data)
+#agent_behavior_function = agent_behavior.run
+
+environment = environment.Environment(agent_behavior_function, dt = .05, sim_time = 0, time_out = 50,
 	hash_map_grid_size = 40, width = 800, height = 600, show_bins = False)
+	
 environment.create_perimeter_walls(location = 'inside', thickness = 5)
 # Create terrain
 #create.create_random_terrain(environment, count = 30, scale = 60)
