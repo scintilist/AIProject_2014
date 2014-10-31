@@ -92,7 +92,10 @@ class Predator():
 		# Calculate final location after move
 		dx = self.vx * self.environment.dt
 		dy = self.vy * self.environment.dt
-		self.terrain_collision_handler(dx, dy)	
+		moves = 0
+		while (dx != 0 or dy != 0) and moves < 4:
+			dx, dy = self.terrain_collision_handler(dx, dy)
+			moves += 1
 		
 		# Update hash map for predator
 		self.hash_map = {}
@@ -212,7 +215,22 @@ class Predator():
 				self.distance_travelled += util.distance((self.x, self.y), (nx, ny))
 				self.x = nx
 				self.y = ny
-				self.speed = 0
+				# New move remaining for sliding behavior
+				sn_ux = surface_normal[0]
+				sn_uy = surface_normal[1]
+				sn_dir = math.atan2(-sn_uy, -sn_ux)
+				collide_angle = (self.dir - sn_dir + math.pi) % (math.pi*2) - math.pi
+				if collide_angle > 0: # Add 90 degrees to surface normal
+					rv_ux = sn_uy
+					rv_uy = -sn_ux
+				else:	# Subtract 90 degrees from surface normal
+					rv_ux = -sn_uy
+					rv_uy = sn_ux
+				# Calculate remaining move vectors
+				rm_dist = util.distance((self.x, self.y),(self.nx, self.ny))
+				rm_x = rv_ux * rm_dist
+				rm_y = rv_uy * rm_dist	
+				return (rm_x, rm_y) # Move incomplete, return remaining move vector
 
 		# If there was no intersection, or the start was inside the block				
 		if start_inside_block or not intersection_locations:
@@ -235,6 +253,7 @@ class Predator():
 				self.y = self.ny
 			else:
 				self.dir += math.pi
+		return (0,0) # Move complete, no remaining dx or dy
 					
 	def draw(self, color = (0,0,1,1)):
 			
