@@ -48,16 +48,20 @@ class EventHandlers():
 		elif symbol == key.EQUAL:
 			self.environment.terrain.grid_size += 10
 			self.environment.swarm.grid_size = self.environment.terrain.grid_size
+			self.environment.predator.grid_size = self.environment.terrain.grid_size
 			self.environment.terrain.reindex()
 			self.environment.swarm.reindex()
+			self.environment.predator.reindex()
 		
 		# Decrease hash table grid size
 		elif symbol == key.MINUS:
 			self.environment.terrain.grid_size -= 10
 			self.environment.terrain.grid_size = max(10, self.environment.terrain.grid_size)
 			self.environment.swarm.grid_size = self.environment.terrain.grid_size
+			self.environment.predator.grid_size = self.environment.terrain.grid_size
 			self.environment.terrain.reindex()
 			self.environment.swarm.reindex()
+			self.environment.predator.reindex()
 		
 		# Pause
 		elif symbol == key.P:
@@ -109,5 +113,7 @@ class EventHandlers():
 		self.environment.terrain.grid_size += 10*scroll_y
 		self.environment.terrain.grid_size = max(10, self.environment.terrain.grid_size)
 		self.environment.swarm.grid_size = self.environment.terrain.grid_size
+		self.environment.predator.grid_size = self.environment.terrain.grid_size
 		self.environment.terrain.reindex()
 		self.environment.swarm.reindex()
+		self.environment.predator.reindex()

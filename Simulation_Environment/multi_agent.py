@@ -1,9 +1,3 @@
-"""
-Agents are non-inertial, massless, and do not collide with eachother
-Agents can be set to either bounce on terrain collision, or stop
-velocity is defined as pixels/second where the standard visual update is 100 steps/second
-"""
-
 import time
 
 import pyglet
@@ -13,9 +7,7 @@ import create
 import environment
 import event_handlers
 import active_actions
-import agent_behavior
 import agent_behavior_base
-import agent_behavior_base_2
 
 # Set up graphical window
 config = Config(double_buffer=True, depth_size=0, sample_buffers=1, samples=8)
@@ -38,26 +30,15 @@ def update(realtime_dt):
 		pyglet.app.exit()
 	active_actions.update()
 
-# Create and initialize environment
-
 # Baseline
-agent_behavior_function = agent_behavior_base_2.behavior
+agent_behavior_function = agent_behavior_base.behavior
 
-# Random behavior
-#behavior_data = 0
-#agent_behavior = agent_behavior.Agent_Behavior(behavior_data)
-#agent_behavior_function = agent_behavior.run
-
+# Create and initialize environment
 environment = environment.Environment(agent_behavior_function, dt = .05, sim_time = 0, time_out = 100,
-	hash_map_grid_size = 40, width = 800, height = 600, show_bins = False)
-	
-environment.create_perimeter_walls(location = 'inside', thickness = 5)
-# Create terrain
-#create.create_random_terrain(environment, count = 1, scale = 60)
-# Create instances of agents
-create.create_test_terrain(environment,60)
-create.create_random_swarm(environment, count = 10, radius = 20, velocity_range = (150, 300))
-#
+	hash_map_grid_size = 40, width = 800, height = 600, show_bins = False, run_max_speed = True)
+environment.create_perimeter_walls(location = 'inside', thickness = 5) # Walls
+create.create_test_terrain(environment) # Terrain
+create.create_random_swarm(environment, count = 10, radius = 20) # Swarm
 
 # Create active action manager
 active_actions = active_actions.ActiveActions(environment)

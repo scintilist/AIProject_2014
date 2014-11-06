@@ -7,11 +7,8 @@ class Swarm():
 		self.agent_dps = 50
 		self.view_range = 200
 		
-		# self.behavior = agent_behavior.Agent_Behavior(behavior_data)
 		self.behavior_function = behavior_function
-		# Empty list of agents in the swarm
 		self.agents = []
-		# Id number of the next agent to be created
 		self.next_agent_id = 0
 		
 		self.environment = environment

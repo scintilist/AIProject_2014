@@ -1,4 +1,5 @@
 import math
+import random
 
 import pyglet
 
@@ -64,8 +65,8 @@ class Agent():
 		# Get the distance to the predator if in range, or inf if not in range
 		# and the angle to rotate to face the predator, or 0 if predator not in range
 		self.predator_distance, self.predator_angle = self.get_predator_input(self.view_range)
-		# Get the count of nearby agents within the view range
-		self.nearby_agent_count = self.get_nearby_agent_count(self.view_range)
+		# Get the count of nearby agents within the view range, and the distance and direction to the nearest agent
+		self.agent_distance, self.agent_angle, self.nearby_agent_count = self.get_agent_input(self.view_range)
 		
 		# Package up all inputs for behavior code processing
 		self.input_data = []
@@ -74,20 +75,35 @@ class Agent():
 		self.input_data.append( self.terrain_distance[1] / self.view_range )
 		self.input_data.append( self.predator_distance / self.view_range )
 		self.input_data.append( (self.predator_angle / (2 * math.pi)) + .5 )
+		self.input_data.append( self.agent_distance / self.view_range )
+		self.input_data.append( (self.agent_angle / (2 * math.pi)) + .5 )	
 		self.input_data.append( self.nearby_agent_count / len(self.swarm.agents) )
 		self.input_data.append( self.health / self.swarm.initial_health )
+		self.input_data.append( random.random() )
 		
-	def get_nearby_agent_count(self, view_range = 200):
+	def get_agent_input(self, view_range = 200):
 		nearby_agent_count = -1 # Compensate for detecting itself
+		dist = view_range
+		closest_agent = False
 		for agent in self.swarm.agents:
-			if util.distance((self.x, self.y),(agent.x, agent.y)) < view_range:
+			new_dist = util.distance((self.x, self.y), (agent.x, agent.y))
+			if new_dist < view_range and self.swarm.terrain.line_of_sight((self.x, self.y), (agent.x, agent.y)):
 				nearby_agent_count += 1
-		return nearby_agent_count
+				if new_dist < dist:
+					dist = new_dist
+					closest_agent = agent
+		if closest_agent:
+			abs_angle = math.atan2(closest_agent.y - self.y, closest_agent.x - self.x)
+			rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
+			return dist, rel_angle, nearby_agent_count
+		else:
+			return view_range, 0, nearby_agent_count
 
-	def get_predator_input(self,view_range = 200):
+	def get_predator_input(self, view_range = 200):
 		predator_location = self.swarm.environment.predator.x, self.swarm.environment.predator.y
 		dist = util.distance(predator_location, (self.x, self.y))
-		if dist > view_range:
+		# If out of range or line of sight is blocked
+		if dist > view_range or not self.swarm.terrain.line_of_sight((self.x, self.y), predator_location):
 			return view_range, 0
 		abs_angle = math.atan2(predator_location[1] - self.y, predator_location[0] - self.x)
 		rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
@@ -117,8 +133,8 @@ class Agent():
 		return tuple(terrain_distance)
 			
 	def attack(self):
-		if(self.predator_distance < self.radius + self.swarm.environment.predator.radius):
-			self.swarm.environment.predator.health = self.swarm.environment.predator.health - self.swarm.environment.dt * self.dps
+		if self.predator_distance < self.radius + self.swarm.environment.predator.radius:
+			self.swarm.environment.predator.health -= self.swarm.environment.dt * self.dps
 	
 	def terrain_collision_handler(self, dx, dy):
 		# Add velocity to get next position (assuming no collision)
@@ -207,21 +223,16 @@ class Agent():
 				self.dir += math.pi
 		return (0,0) # Move complete, no remaining dx or dy
 		
-	def draw(self, color = (0,1,0,1)):
+	def draw(self, color = (0,.8,0,1)):
 		# Draw field of view
-		# field of view
-		pyglet.gl.glColor4f(0,0,0,.5)
-		pyglet.gl.glLineWidth(3)
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
-			(self.x, self.y, 
-			self.x + self.view_range * math.cos(self.dir + math.pi/4), self.y + self.view_range * math.sin(self.dir + math.pi/4)) ) )
-			
-		# field of view
-		pyglet.gl.glColor4f(0,0,0,.5)
-		pyglet.gl.glLineWidth(3)
-		pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
-			(self.x, self.y, 
-			self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)) ) )
+		#pyglet.gl.glColor4f(0,0,0,.5)
+		#pyglet.gl.glLineWidth(3)
+		#pyglet.graphics.draw(4, pyglet.gl.GL_LINES,  ('v2f', (
+		#	self.x, self.y, 
+		#	self.x + self.view_range * math.cos(self.dir + math.pi/4), self.y + self.view_range * math.sin(self.dir + math.pi/4),
+		#	self.x, self.y, 
+		#	self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)
+		#	)))
 		
 		# Draw the agent body circle
 		pyglet.gl.glPointSize(self.radius*2)

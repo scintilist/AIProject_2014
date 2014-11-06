@@ -73,5 +73,15 @@ class Terrain():
 			# Put the block into all hash map locaitons it covers
 			bins = raster.poly_bins(block.vertices, self.grid_size)
 			self.put_in_map(bins, block)
+	
+	def line_of_sight(self, a = (0, 0), b = (0,0)):
+		# Returns true if line of sight between a and b is clear, false if obstructed by terrain
+		bins = raster.line_bins(a, b, bin_size = self.grid_size)
+		block_set = self.check_for_blocks(bins)
+		for block in block_set:
+			for edge in block.edges:
+				if util.intersect(a, b, edge[0], edge[1]):
+					return False
+		return True
 		
 		

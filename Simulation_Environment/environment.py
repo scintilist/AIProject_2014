@@ -12,8 +12,10 @@ import util
 # environmental information such as time
 
 class Environment():
-	def __init__(self, agent_behavior_data, dt, sim_time, time_out, hash_map_grid_size, width = 800, height = 600, show_bins = False):
+	def __init__(self, agent_behavior_data, dt, sim_time, time_out, hash_map_grid_size, 
+		width = 800, height = 600, show_bins = False, run_max_speed = False):
 		self.show_bins = show_bins
+		self.run_max_speed = run_max_speed
 	
 		self.sim_time = sim_time
 		self.time_out = time_out # Simulation time out in seconds
@@ -25,7 +27,7 @@ class Environment():
 		self.swarm = swarm.Swarm(self, agent_behavior_data)
 		
 		# Create predator
-		self.predator = predator.Predator(self, radius = 32, position = (763, 563), speed = 50, direction = math.pi)
+		self.predator = predator.Predator(self, radius = 32, position = (700, 300), speed = 0, direction = math.pi)
 		
 		self.mouse_x = -1
 		self.mouse_y = -1
@@ -53,8 +55,10 @@ class Environment():
 		if not self.paused:
 			calc_start_time = time.perf_counter() # Get calculation start time
 			# Run update loop until simulation is caught up with real time or time out occurs
-			while ( (time.perf_counter() - calc_start_time) < self.update_time_out and 
-					self.sim_time < (time.perf_counter() - self.real_time_start) ):
+			needs_update = (((time.perf_counter() - calc_start_time) < self.update_time_out and 
+							self.sim_time < (time.perf_counter() - self.real_time_start)) or 
+							self.run_max_speed)
+			while needs_update:
 				self.sim_time += self.dt
 				self.swarm.update()
 				self.predator.update()
@@ -73,6 +77,9 @@ class Environment():
 					print("total_agent_health = ", total_agent_health)
 					print("predator_health = ", self.predator.health)
 					return "terminate"
+				needs_update = ((time.perf_counter() - calc_start_time) < self.update_time_out and 
+							self.sim_time < (time.perf_counter() - self.real_time_start) and 
+							not self.run_max_speed)
 	
 	def draw(self):
 		self.terrain.draw()

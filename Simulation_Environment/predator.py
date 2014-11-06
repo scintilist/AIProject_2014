@@ -30,6 +30,8 @@ class Predator():
 		
 		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
 		self.put_in_map(bins)
+		
+		self.agent_in_view = False # Used for debug
 	
 	def behavior(self):
 		# Inputs
@@ -52,7 +54,7 @@ class Predator():
 				self.ang_v = -1
 			else:
 				self.ang_v = -1
-		elif(self.nearby_agent_count>0 and self.nearby_agent_count<5):
+		elif(self.nearby_agent_count>0 and self.nearby_agent_count<3):
 			if(self.agent_angle>0):
 				self.ang_v = 5
 			elif(self.agent_angle<0):
@@ -63,17 +65,17 @@ class Predator():
 			if(self.agent_distance < self.radius):
 				self.speed = 0
 		else:
-			if(self.agent_angle<3.14):
-				self.ang_v = -5
-			elif(self.agent_angle>-3.14):
-				self.ang_v = 5
+			if(-2.8 < self.agent_angle < 2.8):
+				if(self.agent_angle > 0):
+					self.ang_v = -5
+				else:
+					self.ang_v = 5
 			else:
 				self.ang_v = 0
 	
 	def update(self):
 		self.get_inputs()
 		self.attack()
-		#print(self.health)
 		
 	    # Run predator behavior
 		self.behavior()
@@ -98,30 +100,30 @@ class Predator():
 			moves += 1
 		
 		# Update hash map for predator
-		self.hash_map = {}
-		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
-		self.put_in_map(bins)
+		self.reindex()
 		
 		# Mark predator for removal if its health drops to 0 or less
 		if self.health <= 0:
 			self.is_kill = True
+	
+	def reindex(self):
+		self.hash_map = {}
+		bins = raster.circle_bins((self.x, self.y), self.radius, self.grid_size)
+		self.put_in_map(bins)
 			
 	def get_inputs(self):
-		# Get terrain inputs
-		# Cast ray forward, and 45 degrees to each side, return list of collision distances
+		# Cast ray of length view_range forward, and 45 degrees to each side, return list of collision distances
 		self.terrain_distance = self.get_terrain_input(self.view_range)
-		# Get the distance to the predator if in range, or inf if not in range
-		# and the angle to rotate to face the predator, or 0 if predator not in range
-		# Also get the count of nearby agents within the view range
+		# Get distance and angle to nearest agent, and count of nearby agents
 		self.agent_distance, self.agent_angle, self.nearby_agent_count, self.closest_agent = self.get_agent_input(self.view_range)
 	
-	def get_agent_input(self,view_range = 200):
+	def get_agent_input(self, view_range = 200):
 		nearby_agent_count = 0
 		dist = view_range
 		closest_agent = False
 		for agent in self.environment.swarm.agents:
 			new_dist = util.distance((self.x, self.y),(agent.x, agent.y))
-			if new_dist < view_range:
+			if new_dist < view_range  and self.terrain.line_of_sight((self.x, self.y), (agent.x, agent.y)):
 				nearby_agent_count += 1
 				if new_dist < dist:
 					dist = new_dist
@@ -129,9 +131,11 @@ class Predator():
 		if closest_agent:
 			abs_angle = math.atan2(closest_agent.y - self.y, closest_agent.x - self.x)
 			rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi
+			self.agent_in_view = True
 			return dist, rel_angle, nearby_agent_count, closest_agent
 		else:
-			return float('inf'), 0, nearby_agent_count, closest_agent
+			self.agent_in_view = False
+			return view_range, 0, nearby_agent_count, closest_agent
 		
 	def get_terrain_input(self, view_range = 200):
 		terrain_distance = []
@@ -157,9 +161,9 @@ class Predator():
 		return terrain_distance
 		
 	def attack(self):
-		if(self.closest_agent):
-			if(self.agent_distance < self.radius + self.closest_agent.radius):
-				self.closest_agent.health = self.closest_agent.health - self.environment.dt * self.dps
+		if self.closest_agent:
+			if self.agent_distance < self.radius + self.closest_agent.radius :
+				self.closest_agent.health -= self.environment.dt * self.dps
 
 	def put_in_map(self, bins):
 		# Put agent in bins
@@ -255,27 +259,28 @@ class Predator():
 				self.dir += math.pi
 		return (0,0) # Move complete, no remaining dx or dy
 					
-	def draw(self, color = (0,0,1,1)):
-			
+	def draw(self, color = (.2,.2,1,1)):
+		
 		# Draw field of view
-		# field of view
 		#pyglet.gl.glColor4f(0,0,0,.5)
 		#pyglet.gl.glLineWidth(3)
-		#pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
-		#	(self.x, self.y, 
-		#	self.x + self.view_range * math.cos(self.dir + math.pi/4), self.y + self.view_range * math.sin(self.dir + math.pi/4)) ) )
-			
-		# field of view
-		#pyglet.gl.glColor4f(0,0,0,.5)
-		#pyglet.gl.glLineWidth(3)
-		#pyglet.graphics.draw(2, pyglet.gl.GL_LINES,  ('v2f', 
-		#	(self.x, self.y, 
-		#	self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)) ) )
+		#pyglet.graphics.draw(4, pyglet.gl.GL_LINES,  ('v2f', (
+		#	self.x, self.y, 
+		#	self.x + self.view_range * math.cos(self.dir + math.pi/4), self.y + self.view_range * math.sin(self.dir + math.pi/4),
+		#	self.x, self.y, 
+		#	self.x + self.view_range * math.cos(self.dir - math.pi/4), self.y + self.view_range * math.sin(self.dir - math.pi/4)
+		#	)))
 		
 		# Draw the predator body circle
 		pyglet.gl.glPointSize(self.radius*2)
 		pyglet.gl.glColor4f(*color)
 		pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )
+		
+		# Draw the predator agent sighted ring
+		if self.agent_in_view:
+			pyglet.gl.glPointSize(self.radius*2)
+			pyglet.gl.glColor4f(.8,0,0,1)
+			pyglet.graphics.draw(1, pyglet.gl.GL_POINTS, ('v2f', (self.x, self.y) ) )
 		
 		# Draw the predator dirction mark, from center to edge
 		pyglet.gl.glColor4f(0,0,0,1)
