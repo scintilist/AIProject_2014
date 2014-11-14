@@ -1,6 +1,6 @@
-import create
-import environment
-import agent_behavior_base
+from simulation_environment import create
+from simulation_environment import environment
+from simulation_environment import agent_behavior_base
 
 # Baseline
 agent_behavior_function = agent_behavior_base.behavior

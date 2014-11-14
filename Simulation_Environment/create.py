@@ -1,8 +1,8 @@
 import random
 import math
 
-import swarm
-import util
+from . import swarm
+from . import util
 
 def create_random_terrain(environment, count = 10, scale = 100):
 	# Create random convex quadrilaterals

@@ -3,11 +3,11 @@ import time
 import pyglet
 from pyglet.window import key
 
-import agent
-import swarm
-import block
-import terrain
-import interaction
+from . import agent
+from . import swarm
+from . import block
+from . import terrain
+from . import interaction
 
 class EventHandlers():
 	def __init__(self, environment, window, active_actions):

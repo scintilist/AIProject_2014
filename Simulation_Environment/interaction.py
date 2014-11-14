@@ -4,9 +4,9 @@ import time
 import pyglet
 from pyglet.window import key
 
-import util
-import block
-import agent
+from . import util
+from . import block
+from . import agent
 
 class Action():
 	def __init__(self, environment, window, active_actions):

@@ -1,5 +1,5 @@
-import agent
-import raster
+from . import agent
+from . import raster
 
 class Swarm():
 	def __init__(self, environment, behavior_function):

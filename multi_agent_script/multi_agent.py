@@ -3,11 +3,11 @@ import time
 import pyglet
 from pyglet.gl import *
 
-import create
-import environment
-import event_handlers
-import active_actions
-import agent_behavior_base
+from simulation_environment import create
+from simulation_environment import environment
+from simulation_environment import event_handlers
+from simulation_environment import active_actions
+from simulation_environment import agent_behavior_base
 
 # Set up graphical window
 config = Config(double_buffer=True, depth_size=0, sample_buffers=1, samples=8)

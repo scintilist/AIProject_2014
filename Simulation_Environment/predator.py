@@ -2,9 +2,9 @@ import math
 
 import pyglet
 
-import util
-import raster
-import agent
+from . import util
+from . import raster
+from . import agent
 
 class Predator():
 

@@ -3,8 +3,8 @@ import random
 
 import pyglet
 
-import util
-import raster
+from . import util
+from . import raster
 
 class Agent():
 

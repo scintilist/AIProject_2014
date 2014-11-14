@@ -1,7 +1,6 @@
-import block
-import raster
-
-import util
+from . import block
+from . import raster
+from . import util
 
 class Terrain():
 	'''Contains all blocks'''

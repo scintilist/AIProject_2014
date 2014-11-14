@@ -2,11 +2,11 @@ import time
 import random
 import math
 
-import terrain
-import swarm
-import predator
-import raster
-import util
+from . import terrain
+from . import swarm
+from . import predator
+from . import raster
+from . import util
 
 # Contains terrain and swarms, and is used to allow individual agents and blocks to access
 # environmental information such as time

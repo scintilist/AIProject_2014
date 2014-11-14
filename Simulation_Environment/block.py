@@ -1,6 +1,6 @@
 import pyglet
 
-import util
+from . import util
 
 class Block():
 	'''Blocks are stationary obstacles to the agents
