@@ -82,17 +82,18 @@ class Agent():
 		self.input_data.append( random.random() )
 		
 	def get_agent_input(self, view_range = 200):
-		nearby_agent_count = -1 # Compensate for detecting itself
+		nearby_agent_count = 0
 		dist = view_range
 		closest_agent = False
 		for agent in self.swarm.agents:
-			if agent.id !=self.id:
-				new_dist = util.distance((self.x, self.y), (agent.x, agent.y))
-				if new_dist < view_range and self.swarm.terrain.line_of_sight((self.x, self.y), (agent.x, agent.y)):
-					nearby_agent_count += 1
-					if new_dist < dist:
-						dist = new_dist
-						closest_agent = agent
+			new_dist = util.distance((self.x, self.y), (agent.x, agent.y))
+			if (agent is not self and # Don't detect self
+					new_dist < view_range and 
+					self.swarm.terrain.line_of_sight((self.x, self.y), (agent.x, agent.y))):
+				nearby_agent_count += 1
+				if new_dist < dist:
+					dist = new_dist
+					closest_agent = agent
 		if closest_agent:
 			abs_angle = math.atan2(closest_agent.y - self.y, closest_agent.x - self.x)
 			rel_angle = (math.pi + abs_angle - self.dir) % (2*math.pi) - math.pi

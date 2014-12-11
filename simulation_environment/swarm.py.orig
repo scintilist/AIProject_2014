@@ -1,0 +1,92 @@
+from . import agent
+from . import raster
+
+class Swarm():
+	def __init__(self, environment, behavior_function):
+		self.initial_health = 100
+		self.agent_dps = 50
+		self.view_range = 200
+		
+		self.behavior_function = behavior_function
+		self.agents = []
+		self.next_agent_id = 0
+		
+		self.environment = environment
+		self.terrain = environment.terrain
+		self.grid_size = self.terrain.grid_size
+		self.hash_map = {}
+		
+	def add_new_agent(self, radius = 16, position = (0, 0), speed = 0, direction = 0):
+		new_agent = agent.Agent(self, self.next_agent_id, radius, position, speed, direction)
+		self.agents.append(new_agent)
+		self.next_agent_id += 1
+		bins = raster.circle_bins((new_agent.x, new_agent.y), new_agent.radius, self.grid_size)
+		self.put_in_map(bins, agent)
+		return new_agent
+		
+	def add_agent(self, new_agent):
+		self.agents.append(new_agent)
+		return new_agent
+		
+	def remove_agent(self, agent):
+		bins = raster.circle_bins((agent.x, agent.y), agent.radius, self.grid_size)
+		self.remove_from_map(bins, agent)
+		self.agents.remove(agent)
+		
+	def draw(self):
+		for agent in self.agents:
+			agent.draw()
+	
+	def update(self):
+		for agent in self.agents:
+			agent.get_inputs()
+			agent.attack()
+			# Run agent behavior code
+<<<<<<< HEAD
+			agent.output_data = self.behavior_function(agent.input_data,agent.id)
+		
+=======
+			agent.output_data = self.behavior_function(agent.input_data)
+>>>>>>> c17795b391be47881a2a8d4eace7abaf76777aed
+	
+		for agent in self.agents:
+			agent.update()
+			
+		# Prune agents marked for removal
+		for i, agent in enumerate(self.agents):
+			if agent.is_kill:
+				del self.agents[i]
+				
+		# Update hash map for all agents
+		self.reindex()
+				
+	def put_in_map(self, bins, agent):
+		# Put agent in bins
+		for bin in bins:
+			if bin not in self.hash_map:
+				self.hash_map[bin] = set()
+			self.hash_map[bin].add(agent)
+			
+	def remove_from_map(self, bins, agent):
+		# Remove agent from bins
+		for bin in bins:
+			if bin in self.hash_map:
+				self.hash_map[bin].discard(agent)
+				if not self.hash_map[bin]: # Remove dict entry if set is empty
+					del self.hash_map[bin]
+					
+	def check_for_agents(self, bins):
+		# Return the set of blocks contained in the set of bins
+		agents = set()
+		for bin in bins:
+			if bin in self.hash_map:
+				agents |= self.hash_map[bin]
+		return agents
+		
+	def reindex(self):
+		self.hash_map = {}
+		# Places all agents into appropriate bins
+		for agent in self.agents:
+			# Put the agent into all hash map locations it covers
+			bins = raster.circle_bins((agent.x, agent.y), agent.radius, self.grid_size)
+			self.put_in_map(bins, agent)

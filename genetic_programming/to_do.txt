@@ -1,0 +1,43 @@
+-simulate 200 generations of averages of 10 baseline runs
+-get fitness data from tyler, graph with matlab along with baseline
+
+-increase population and max mutation rate
+
+
+-population: 10, 20, 50
+-instr_count: 100, 200, 500
+-c_prob: 0.01, 0.02, 0.05
+-m_prob: 0.01, 0.02, 0.05
+
+
+-plot all sets of average and peak fitness vs. generation for each sweep
+
+
+-Theory: fitness ceiling due to random start forcing generalized algorithms
+-Fast and short rise indicates rate of mutation is too high
+	
+
+~4 seconds per simulation
+
+~1 second to generate lgp for each individual
+
+populations of 10 individuals:
+	-50 seconds per generation
+	-72 generations/hour
+	-1728 generations per day
+	
+
+	
+-add input configuration file name as a command line parameter
+-put main simulation into it's own function and file
+
+-gen_prog script will execute the function and pass in relevant parameters
+-add ability to read configuration parameters from a file
+-add ability to run batches of simulations with multiple configurations stored in a file as json
+change output format to proper csv
+-put config in separate file from log data
+-> change script to open and close log file every generation in case of interruption
+
+-find frequncy of op codes after evolving
+	-set initial weightings based on this
+-no patterns found

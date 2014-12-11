@@ -41,32 +41,32 @@ class Predator():
 		#print(self.nearby_agent_count)
 		
 		self.speed = 100
-		if(self.nearby_agent_count==0):
-			if (self.terrain_distance[2] == self.terrain_distance[0] and self.terrain_distance[2] == 200):
+		if self.nearby_agent_count == 0:
+			# Go strait if no terrain is nearby
+			if self.terrain_distance[0] > 100 and self.terrain_distance[2] > 100:
 				self.ang_v = 0
-			elif (self.terrain_distance[2] >= self.terrain_distance[0] and self.terrain_distance[2] == 200):
-				self.ang_v = -1
-			elif (self.terrain_distance[2] <= self.terrain_distance[0] and self.terrain_distance[0] == 200):
-				self.ang_v = -1
-			elif (self.terrain_distance[2] <= self.terrain_distance[0] and self.terrain_distance[0] < 200):
-				self.ang_v = -1
-			elif (self.terrain_distance[2] >= self.terrain_distance[0] and self.terrain_distance[0] > 200):
-				self.ang_v = -1
+			# Avoid terrain
+			elif self.terrain_distance[0] > 50 and self.terrain_distance[2] > 50:
+				if self.terrain_distance[2] >= self.terrain_distance[0]:
+					self.ang_v = 1 # Turn away from terrain
+				else:
+					self.ang_v = -1 # Turn away from terrain
+			# Always turn the same direction when close to terrain to avoid getting stuck
 			else:
-				self.ang_v = -1
-		elif(self.nearby_agent_count>0 and self.nearby_agent_count<3):
-			if(self.agent_angle>0):
-				self.ang_v = 5
-			elif(self.agent_angle<0):
-				self.ang_v = -5
-			else:
+				self.ang_v = 1
+		elif 0 < self.nearby_agent_count < 3: # Go towards agents in small groups
+			if abs(self.agent_angle) < .2:
 				self.ang_v = 0
-				
-			if(self.agent_distance < self.radius):
+			else:
+				if self.agent_angle > 0:
+					self.ang_v = 5
+				else:
+					self.ang_v = -5
+			if self.agent_distance < self.radius:
 				self.speed = 0
-		else:
-			if(-2.8 < self.agent_angle < 2.8):
-				if(self.agent_angle > 0):
+		else: # Flee from large groups of agents
+			if -2.8 < self.agent_angle < 2.8:
+				if self.agent_angle > 0:
 					self.ang_v = -5
 				else:
 					self.ang_v = 5
