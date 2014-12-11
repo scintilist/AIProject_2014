@@ -42,7 +42,10 @@ class Swarm():
 			agent.get_inputs()
 			agent.attack()
 			# Run agent behavior code
-			agent.output_data = self.behavior_function(agent.input_data,agent.id)
+			try:
+				agent.output_data = self.behavior_function(agent.input_data, agent.id)
+			except:
+				agent.output_data = self.behavior_function(agent.input_data)
 	
 		for agent in self.agents:
 			agent.update()
