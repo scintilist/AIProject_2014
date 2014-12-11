@@ -43,7 +43,6 @@ class Swarm():
 			agent.attack()
 			# Run agent behavior code
 			agent.output_data = self.behavior_function(agent.input_data)
-		
 	
 		for agent in self.agents:
 			agent.update()

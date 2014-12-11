@@ -1,0 +1,23 @@
+[
+	{
+		"config_name": "test1",
+		"sim_time_out": 5,
+		"sim_time_step": 0.1,
+		"sim_count": 5,
+		"population": 4,
+		"generations": 5,
+		"instr_count": 200,
+		"c_prob": 0.05,
+		"m_prob": 0.02
+	},
+	{
+		"config_name": "test2",
+		"sim_time_out": 5,
+		"sim_time_step": 0.1,
+		"population": 4,
+		"generations": 5,
+		"instr_count": 200,
+		"c_prob": 0.05,
+		"m_prob": 0.02
+	}
+]

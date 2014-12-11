@@ -1,0 +1,33 @@
+[
+	{
+		"config_name": "test8",
+		"sim_time_out": 50,
+		"sim_time_step": 0.1,
+		"population": 20,
+		"generations": 1000,
+		"instr_count": 400,
+		"c_prob": 0.01,
+		"m_prob": 0.02
+	},
+	{
+		"config_name": "test9",
+		"sim_time_out": 50,
+		"sim_time_step": 0.1,
+		"population": 20,
+		"generations": 500,
+		"instr_count": 500,
+		"c_prob": 0.01,
+		"m_prob": 0.01
+	},
+	{
+		"config_name": "test10",
+		"sim_time_out": 50,
+		"sim_time_step": 0.1,
+		"population": 50,
+		"generations": 1000,
+		"instr_count": 300,
+		"c_prob": 0.02,
+		"m_prob": 0.05
+	}
+	
+]

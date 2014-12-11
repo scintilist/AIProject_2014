@@ -1,0 +1,57 @@
+sim_time_out = 50
+sim_time_step = 0.1
+population_size = 20
+instr_count = 200
+c_prob = 0.02
+m_prob = 0.05
+gen, peakF, survive, avgF, run_time
+gen =   0, peakF =  -820, survive =  0, avgF =  -930.8, run_time = 60.24
+gen =   1, peakF =  -115, survive =  0, avgF =  -852.8, run_time = 66.46
+gen =   2, peakF =   605, survive =  8, avgF =  -525.0, run_time = 77.05
+gen =   3, peakF =   710, survive =  9, avgF =  -470.0, run_time = 74.81
+gen =   4, peakF =   510, survive =  6, avgF =  -332.0, run_time = 72.14
+gen =   5, peakF =   460, survive =  6, avgF =  -419.8, run_time = 71.95
+gen =   6, peakF =   610, survive = 10, avgF =  -381.0, run_time = 79.77
+gen =   7, peakF =   555, survive =  7, avgF =  -240.0, run_time = 67.49
+gen =   8, peakF =   570, survive =  6, avgF =  -238.0, run_time = 76.20
+gen =   9, peakF =   515, survive =  8, avgF =  -531.5, run_time = 70.33
+gen =  10, peakF =   620, survive =  8, avgF =  -333.8, run_time = 69.98
+gen =  11, peakF =   635, survive =  9, avgF =  -350.5, run_time = 75.78
+gen =  12, peakF =   670, survive =  9, avgF =     0.8, run_time = 72.43
+gen =  13, peakF =   585, survive =  9, avgF =  -297.8, run_time = 74.12
+gen =  14, peakF =   510, survive =  6, avgF =  -414.0, run_time = 76.11
+gen =  15, peakF =   505, survive =  9, avgF =  -542.2, run_time = 73.63
+gen =  16, peakF =   655, survive =  7, avgF =  -342.5, run_time = 71.99
+gen =  17, peakF =   655, survive =  9, avgF =  -357.5, run_time = 69.26
+gen =  18, peakF =   615, survive =  7, avgF =  -406.2, run_time = 73.24
+gen =  19, peakF =   670, survive =  7, avgF =  -324.8, run_time = 77.87
+gen =  20, peakF =   630, survive =  9, avgF =     0.5, run_time = 75.35
+gen =  21, peakF =   585, survive =  9, avgF =  -271.8, run_time = 77.88
+gen =  22, peakF =   635, survive = 10, avgF =  -365.5, run_time = 79.25
+gen =  23, peakF =   590, survive =  8, avgF =  -210.8, run_time = 72.19
+gen =  24, peakF =   685, survive =  9, avgF =  -176.5, run_time = 78.16
+gen =  25, peakF =   630, survive =  9, avgF =  -226.5, run_time = 75.64
+gen =  26, peakF =   635, survive =  9, avgF =  -330.2, run_time = 77.15
+gen =  27, peakF =   650, survive =  8, avgF =  -288.5, run_time = 74.05
+gen =  28, peakF =   730, survive = 10, avgF =  -252.8, run_time = 69.59
+gen =  29, peakF =   625, survive =  8, avgF =  -208.0, run_time = 74.65
+gen =  30, peakF =   670, survive =  8, avgF =  -428.0, run_time = 70.63
+gen =  31, peakF =   615, survive =  8, avgF =  -389.0, run_time = 75.69
+gen =  32, peakF =   695, survive =  9, avgF =  -282.5, run_time = 77.34
+gen =  33, peakF =   630, survive =  8, avgF =  -255.2, run_time = 77.79
+gen =  34, peakF =   655, survive = 10, avgF =  -275.2, run_time = 73.74
+gen =  35, peakF =   725, survive =  9, avgF =  -117.5, run_time = 75.25
+gen =  36, peakF =   650, survive =  8, avgF =  -396.5, run_time = 80.15
+gen =  37, peakF =   750, survive =  9, avgF =  -240.2, run_time = 74.11
+gen =  38, peakF =   670, survive =  7, avgF =  -265.5, run_time = 74.52
+gen =  39, peakF =   540, survive =  7, avgF =   -45.2, run_time = 72.19
+gen =  40, peakF =   680, survive =  8, avgF =  -330.8, run_time = 75.60
+gen =  41, peakF =   665, survive =  8, avgF =  -401.2, run_time = 79.22
+gen =  42, peakF =   675, survive = 10, avgF =  -128.5, run_time = 72.28
+gen =  43, peakF =   530, survive =  8, avgF =  -512.5, run_time = 74.15
+gen =  44, peakF =   505, survive =  6, avgF =  -345.5, run_time = 69.82
+gen =  45, peakF =   515, survive =  6, avgF =  -351.5, run_time = 73.80
+gen =  46, peakF =   650, survive =  9, avgF =  -327.0, run_time = 75.82
+gen =  47, peakF =   605, survive =  8, avgF =  -186.2, run_time = 77.93
+gen =  48, peakF =   485, survive =  6, avgF =  -364.8, run_time = 76.07
+gen =  49, peakF =   625, survive =  8, avgF =  -469.2, run_time = 74.30

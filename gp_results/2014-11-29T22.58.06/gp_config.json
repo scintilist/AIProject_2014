@@ -1,0 +1,13 @@
+[
+	{
+		"config_name": "test11",
+		"sim_time_out": 50,
+		"sim_time_step": 0.1,
+		"sim_count": 10,
+		"population": 20,
+		"generations": 200,
+		"instr_count": 400,
+		"c_prob": 0.01,
+		"m_prob": 0.05
+	}
+]
